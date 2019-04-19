@@ -36,13 +36,18 @@ function sendName() {
     stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
 }
 
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
-}
-
 function sendRoom() {
     stompClient.send("/app/room_chat", {}, JSON.stringify({'roomNumber': $("#roomNumber").val(),
                                                         'roomMessage': $("#roomMessage").val()}));
+}
+
+function translate() {
+    stompClient.send("/app/translate_message", {}, JSON.stringify({'messageCH': $("#msgCH").val(),
+                                                                    'messageEN': $("#msgEN").val()}));
+}
+
+function showGreeting(message) {
+    $("#greetings").append("<tr><td>" + message + "</td></tr>");
 }
 
 $(function () {
@@ -53,4 +58,5 @@ $(function () {
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendName(); });
     $( "#room_send" ).click(function() { sendRoom(); })
+    $( "#trans_send" ).click(function() { translate(); })
 });

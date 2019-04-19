@@ -3,12 +3,14 @@ package hello;
 public class RoomMessage {
     private String roomNumber;
     private String roomMessage;
+    private String messageEN;
+    private String messageCH;
 
     public RoomMessage() { }
 
-    public RoomMessage(String roomNumber, String roomMessage) {
-        this.roomNumber = roomNumber;
-        this.roomMessage = roomMessage;
+    public RoomMessage(String messageCH, String messageEN) {
+        this.messageEN = messageEN;
+        this.messageCH = messageCH;
     }
 
     public String getRoomNumber() {
@@ -25,5 +27,21 @@ public class RoomMessage {
 
     public void setRoomMessage(String roomMessage) {
         this.roomMessage = roomMessage;
+    }
+
+    public String getMessageEN() {
+        return messageEN;
+    }
+
+    public void setMessageEN(String messageEN) {
+        this.messageEN = messageEN;
+    }
+
+    public String getMessageCH() {
+        return messageCH;
+    }
+
+    public void setMessageCH(String messageCH) {
+        this.messageCH = messageCH;
     }
 }
