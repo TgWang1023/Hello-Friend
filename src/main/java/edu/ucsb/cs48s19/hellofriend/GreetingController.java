@@ -1,5 +1,6 @@
 package edu.ucsb.cs48s19.hellofriend;
 
+import edu.ucsb.cs48s19.translate.Translator;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -7,7 +8,6 @@ import org.springframework.web.util.HtmlUtils;
 
 @Controller
 public class GreetingController {
-
 
     @MessageMapping("/hello")
     @SendTo("/room/greetings")
@@ -36,10 +36,11 @@ public class GreetingController {
         String msg;
         if (msgCH.isEmpty() && !msgEN.isEmpty()) {
             // translate into CH
-            msg = "Chinese text";
+            msg = "Translated Chinese text";
         } else if (!msgCH.isEmpty() && msgEN.isEmpty()) {
             // translate into EN
-            msg = "English text";
+            // msg = Translator.zh_CN_to_en(msgCH);
+            msg = "Translated English text";
         } else {
             msg = "Please input exactly one language.";
         }
