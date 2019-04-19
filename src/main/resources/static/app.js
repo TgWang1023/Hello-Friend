@@ -40,6 +40,11 @@ function showGreeting(message) {
     $("#greetings").append("<tr><td>" + message + "</td></tr>");
 }
 
+function sendRoom() {
+    stompClient.send("/app/room_chat", {}, JSON.stringify({'roomNumber': $("#roomNumber").val(),
+                                                        'roomMessage': $("#roomMessage").val()}));
+}
+
 $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
@@ -47,4 +52,5 @@ $(function () {
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendName(); });
+    $( "#room_send" ).click(function() { sendRoom(); })
 });

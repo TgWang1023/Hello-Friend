@@ -11,10 +11,27 @@ public class GreetingController {
 
     @MessageMapping("/hello")
     @SendTo("/room/greetings")
-    public Greeting greeting(HelloMessage message) throws Exception {
-        System.out.println("Received from: " + message.getName());
+    public Message greeting(HelloMessage message) throws Exception {
+        System.out.println("Hello from: " + message.getName());
         Thread.sleep(100); // simulated delay
-        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+        return new Message("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+    }
+
+    @MessageMapping("/room_chat")
+    @SendTo("/room/greetings")
+    public Message RoomChat(RoomMessage roomMessage) throws Exception {
+        String info = String.format("Room: %s, message: %s",
+                roomMessage.getRoomNumber(), roomMessage.getRoomMessage());
+        System.out.println(info);
+        Thread.sleep(100);
+        return new Message(info);
+    }
+
+    @MessageMapping("/translate_message")
+    @SendTo("/room/greetings")
+    public Message TranslateMessage(RoomMessage roomMessage) throws Exception {
+        // TODO
+        return null;
     }
 
 }
