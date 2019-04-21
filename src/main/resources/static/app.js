@@ -1,4 +1,5 @@
 var stompClient = null;
+var sessionId = "";
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -13,17 +14,25 @@ function setConnected(connected) {
 }
 
 function connect() {
-    var socket = new SockJS('/hello-friend');
+    var socket = new SockJS('/secured/room');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
+        var url = stompClient.ws._transport.url;
+        url = url.replace(
+            "ws://localhost:8080/secured/room", "");
+        url = url.replace("/websocket", "");
+        url = url.replace(/^[0-9]+\//, "");
+        console.log("Your current session is: " + url);
+        sessionId = url;
         setConnected(true);
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/room/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
-        });
-//        stompClient.subscribe('/user/queue/user_reply', function (greeting) {
+//        console.log('Connected: ' + frame);
+//        stompClient.subscribe('/room/greetings', function (greeting) {
 //            showGreeting(JSON.parse(greeting.body).content);
 //        });
+        stompClient.subscribe('/secured/user/queue/specific-room'
+            + '-user' + sessionId, function (greeting) {
+                alert(JSON.parse(greeting.body).content);
+        });
     });
 }
 
@@ -44,6 +53,7 @@ function sendRoom() {
                                                         'roomMessage': $("#roomMessage").val()}));
 }
 
+// experiment
 function sendUserChannel() {
     stompClient.send("/app/user_channel", {}, JSON.stringify({'roomNumber': $("#roomNumber").val(),
                                                         'roomMessage': $("#roomMessage").val()}));

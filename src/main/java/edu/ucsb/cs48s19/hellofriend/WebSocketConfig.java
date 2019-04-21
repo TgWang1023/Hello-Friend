@@ -20,33 +20,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-//        registry.addEndpoint("/hello-friend").withSockJS();
-        registry
-                .addEndpoint("/hello-friend")
-                .setHandshakeHandler(new DefaultHandshakeHandler() {
-                    public boolean beforeHandshake(
-                            ServerHttpRequest request,
-                            ServerHttpResponse response,
-                            WebSocketHandler wsHandler,
-                            Map attributes) throws Exception {
-                        if (request instanceof ServletServerHttpRequest) {
-                            ServletServerHttpRequest servletRequest
-                                    = (ServletServerHttpRequest) request;
-                            HttpSession session = servletRequest
-                                    .getServletRequest().getSession();
-                            attributes.put("sessionId", session.getId());
-                        }
-                        return true;
-                    }
-                }
-                ).withSockJS();
+        registry.addEndpoint("/secured/room").withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/room");
+        config.enableSimpleBroker("/secured/user/queue/specific-room");
         config.setApplicationDestinationPrefixes("/app");
-        config.setUserDestinationPrefix("/user");           // destination of user msg
+        config.setUserDestinationPrefix("/secured/user");
     }
 
 }
