@@ -21,6 +21,9 @@ function connect() {
         stompClient.subscribe('/room/greetings', function (greeting) {
             showGreeting(JSON.parse(greeting.body).content);
         });
+//        stompClient.subscribe('/user/queue/user_reply', function (greeting) {
+//            showGreeting(JSON.parse(greeting.body).content);
+//        });
     });
 }
 
@@ -41,6 +44,11 @@ function sendRoom() {
                                                         'roomMessage': $("#roomMessage").val()}));
 }
 
+function sendUserChannel() {
+    stompClient.send("/app/user_channel", {}, JSON.stringify({'roomNumber': $("#roomNumber").val(),
+                                                        'roomMessage': $("#roomMessage").val()}));
+}
+
 function translate() {
     stompClient.send("/app/translate_message", {}, JSON.stringify({'messageCH': $("#msgCH").val(),
                                                                     'messageEN': $("#msgEN").val()}));
@@ -57,6 +65,6 @@ $(function () {
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendName(); });
-    $( "#room_send" ).click(function() { sendRoom(); })
+    $( "#room_send" ).click(function() { sendRoom(); }) // sendRoom()
     $( "#trans_send" ).click(function() { translate(); })
 });
