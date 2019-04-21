@@ -1,13 +1,13 @@
 package edu.ucsb.cs48s19.hellofriend;
 
-import edu.ucsb.cs48s19.translate.Translator;
+//import edu.ucsb.cs48s19.translate.Translator;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
 
 @Controller
-public class GreetingController {
+public class HelloFriendController {
 
     @MessageMapping("/hello")
     @SendTo("/room/greetings")
