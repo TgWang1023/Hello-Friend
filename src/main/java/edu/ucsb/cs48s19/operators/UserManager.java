@@ -8,4 +8,9 @@ public class UserManager {
         return String.format("%s__%s", pref, postf);
     }
 
+    public static String getChannel(String sessionId) {
+        String[] arr = sessionId.split("__");
+        return String.format("/%s/%s", arr[0], arr[1]);
+    }
+
 }

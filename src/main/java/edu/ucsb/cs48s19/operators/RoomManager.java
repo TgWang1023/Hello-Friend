@@ -37,7 +37,7 @@ public class RoomManager {
         return true;
     }
 
-    public static boolean joinRoom(
+    public static String joinRoom(
             JoinRequest joinRequest,
             String sessionId) {
 
@@ -51,10 +51,10 @@ public class RoomManager {
         if (targetRoom.joinUser(joiner)) {
             System.out.println(targetRoom);
             sessionIdToRoom.put(sessionId, targetRoom);
-            return true;
+            return targetRoom.getOwner().getSessionId();
         }
 
-        return false;
+        return null;
     }
 
 }

@@ -32,14 +32,19 @@ public class HelloFriendController {
         if (joinRequest.getRequest() == 1) {
             RoomManager.createRoom(joinRequest, sessionId);
         } else {
-            RoomManager.joinRoom(joinRequest, sessionId);
+            String msg = RoomManager.joinRoom(joinRequest, sessionId);
+            msg = UserManager.getChannel(msg);
+            return new Message(msg);
         }
+        // TODO: send joiner the receiving URL
         return new Message("Success.");
     }
 
     // disconnect user
     @MessageMapping("/secured/user/disconnect/{prefix}/{postfix}")
-    public void disconnectUser() throws Exception {
+    public void disconnectUser(
+            @DestinationVariable String prefix,
+            @DestinationVariable String postfix) throws Exception {
         // TODO: un-list disconnected user
         System.out.println("Disconnect user.");
     }
