@@ -1,6 +1,5 @@
 package edu.ucsb.cs48s19.templates;
 
-
 public class Room {
     private String name;
     private User owner;
@@ -33,16 +32,38 @@ public class Room {
         return joiner == null;
     }
 
+    public boolean joinUser(User joiner) {
+        if (this.canJoin()) {
+            this.joiner = joiner;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean userQuit(User quitUser) {
+        // TODO
+        return false;
+    }
+
     public void sendMessage(String message) {
-        // TODO: translate message to user's preffered lang
+        // TODO: translate message to user's preffered language
+        // TODO: send message to all users in the channel
     }
 
     @Override
     public String toString() {
-        return "Room{" +
-                "name='" + name + '\'' +
-                ", owner=" + owner.getName() +
-                ", joiner=" + joiner.getName() +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("Room{");
+        sb.append("name='");
+        sb.append(name);
+        sb.append('\'');
+        sb.append(", owner=");
+        sb.append(owner.getName());
+        sb.append(", joiner=");
+        if (joiner == null) { sb.append("null"); }
+        else { sb.append(joiner.getName()); }
+        sb.append('}');
+
+        return sb.toString();
     }
 }

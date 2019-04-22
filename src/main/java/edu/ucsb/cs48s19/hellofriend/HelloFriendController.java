@@ -1,13 +1,15 @@
 package edu.ucsb.cs48s19.hellofriend;
 
+import edu.ucsb.cs48s19.operators.RoomManager;
+import edu.ucsb.cs48s19.operators.UserManager;
 import edu.ucsb.cs48s19.templates.HelloMessage;
 import edu.ucsb.cs48s19.templates.JoinRequest;
 import edu.ucsb.cs48s19.templates.Message;
 import edu.ucsb.cs48s19.templates.RoomMessage;
 //import edu.ucsb.cs48s19.translate.Translator;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.*;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
+//import org.springframework.messaging.simp.SimpMessageSendingOperations;
 //import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
@@ -17,17 +19,29 @@ import org.springframework.web.util.HtmlUtils;
 @Controller
 public class HelloFriendController {
 
+    // connect user
     @MessageMapping("/secured/user/connect/{prefix}/{postfix}")
     @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
-    public Message connectUser(JoinRequest joinRequest) throws Exception {
+    public Message connectUser(
+            JoinRequest joinRequest,
+            @DestinationVariable String prefix,
+            @DestinationVariable String postfix) throws Exception {
         // TODO: en-list newly connected user
         System.out.println(joinRequest);
-        return new Message("Successful.");
+        String sessionId = UserManager.getSessionId(prefix, postfix);
+        if (joinRequest.getRequest() == 1) {
+            RoomManager.createRoom(joinRequest, sessionId);
+        } else {
+            RoomManager.joinRoom(joinRequest, sessionId);
+        }
+        return new Message("Success.");
     }
 
+    // disconnect user
     @MessageMapping("/secured/user/disconnect/{prefix}/{postfix}")
     public void disconnectUser() throws Exception {
         // TODO: un-list disconnected user
+        System.out.println("Disconnect user.");
     }
 
     // Hello message
@@ -53,6 +67,7 @@ public class HelloFriendController {
         return message;
     }
 
+    /*
     @MessageMapping("/translate_message")
     @SendTo("/room/greetings")
     public Message TranslateMessage(RoomMessage roomMessage) throws Exception {
@@ -72,5 +87,6 @@ public class HelloFriendController {
         }
         return new Message(msg);
     }
+    */
 
 }

@@ -35,6 +35,7 @@ function connect() {
 
 function disconnect() {
     if (stompClient !== null) {
+        stompClient.send("/app/secured/user/disconnect" + url, {}, {});
         stompClient.disconnect();
     }
     setConnected(false);
@@ -47,7 +48,7 @@ function sendName() {
     ));
 }
 
-// experiment
+// TODO
 function createRoom() {
     stompClient.send("/app/secured/user/connect" + url, {}, JSON.stringify(
         {'userName': $("#user_name").val(),
@@ -57,6 +58,7 @@ function createRoom() {
     ));
 }
 
+// TODO
 function joinRoom() {
     stompClient.send("/app/secured/user/connect" + url, {}, JSON.stringify(
         {'userName': $("#user_name").val(),
@@ -66,12 +68,13 @@ function joinRoom() {
     ));
 }
 
+/*
 function translate() {
     stompClient.send("/app/translate_message", {}, JSON.stringify(
         {'messageCH': $("#msgCH").val(),
         'messageEN': $("#msgEN").val()}
     ));
-}
+}*/
 
 function showMessage(message) {
     $("#greetings").append("<tr><td>" + message + "</td></tr>");

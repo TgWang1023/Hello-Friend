@@ -8,38 +8,39 @@ public class JoinRequest {
 
     public JoinRequest() { }
 
-    public JoinRequest(String userName, String roomName, String userLanguage) {
+    public JoinRequest(String userName, String roomName, String userLanguage, int request) {
         this.userName = userName;
         this.roomName = roomName;
         this.userLanguage = userLanguage;
+        this.request = request;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public String getRoomName() {
         return roomName;
-    }
-
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
     }
 
     public String getUserLanguage() {
         return userLanguage;
     }
 
-    public void setUserLanguage(String userLanguage) {
-        this.userLanguage = userLanguage;
-    }
-
     public int getRequest() {
         return request;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public void setUserLanguage(String userLanguage) {
+        this.userLanguage = userLanguage;
     }
 
     public void setRequest(int request) {
