@@ -30,7 +30,7 @@
             <form class="form-inline">
                 <div class="form-group">
                     <label for="name">What is your name?</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
+                    <input type="text" id="hello_name" class="form-control" placeholder="Your name here...">
                 </div>
                 <button id="send" class="btn btn-default" type="submit">Send</button>
             </form>
@@ -43,10 +43,12 @@
         <form class="form-inline">
             <div class="form-group">
                 <label for="name">Experimental Section:</label>
-                <input type="text" id="roomNumber" class="form-control" placeholder="1234">
-                <input type="text" id="roomMessage" class="form-control" placeholder="Message">
+                <input type="text" id="user_name" class="form-control" placeholder="Tom">
+                <input type="text" id="user_lang" class="form-control" placeholder="zh-CH">
+                <input type="text" id="room_name" class="form-control" placeholder="1234">
             </div>
-            <button id="room_send" class="btn btn-default" type="submit">Send to Room</button>
+            <button id="create_room" class="btn btn-default" type="submit">Create a Room</button>
+            <button id="join_room" class="btn btn-default" type="submit">Join a Room</button>
         </form>
     </div>
     <!-- Translate Area -->
@@ -67,7 +69,7 @@
             <table id="conversation" class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Greetings</th>
+                    <th>Messages</th>
                 </tr>
                 </thead>
                 <tbody id="greetings">

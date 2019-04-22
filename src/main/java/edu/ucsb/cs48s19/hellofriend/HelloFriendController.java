@@ -1,62 +1,55 @@
 package edu.ucsb.cs48s19.hellofriend;
 
 import edu.ucsb.cs48s19.templates.HelloMessage;
+import edu.ucsb.cs48s19.templates.JoinRequest;
 import edu.ucsb.cs48s19.templates.Message;
 import edu.ucsb.cs48s19.templates.RoomMessage;
 //import edu.ucsb.cs48s19.translate.Translator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.annotation.SendToUser;
+//import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
 
-import java.security.Principal;
+//import java.security.Principal;
 
 @Controller
 public class HelloFriendController {
 
-    @Autowired
-    private SimpMessageSendingOperations simpMessageSendingOperations;
+    @MessageMapping("/secured/user/connect/{prefix}/{postfix}")
+    @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
+    public Message connectUser(JoinRequest joinRequest) throws Exception {
+        // TODO: en-list newly connected user
+        System.out.println(joinRequest);
+        return new Message("Successful.");
+    }
 
-    @MessageMapping("/hello")
-    @SendTo("/room/greetings")
+    @MessageMapping("/secured/user/disconnect/{prefix}/{postfix}")
+    public void disconnectUser() throws Exception {
+        // TODO: un-list disconnected user
+    }
+
+    // Hello message
+    @MessageMapping("/secured/user/hello/{prefix}/{postfix}")
+    @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
     public Message greeting(HelloMessage message) throws Exception {
         System.out.println("Hello from: " + message.getName());
         Thread.sleep(100); // simulated delay
         return new Message("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
     }
 
-    @MessageMapping("/room_chat")
-    @SendTo("/room/greetings")
-    public Message RoomChat(RoomMessage roomMessage) throws Exception {
-        String info = String.format("Room: %s, message: %s",
-                roomMessage.getRoomNumber(), roomMessage.getRoomMessage());
-        System.out.println(info);
-        Thread.sleep(100);
-        return new Message(info);
-    }
-
-    // experiment: get session ID
+    // Room message
     @MessageMapping("/secured/user/send/{prefix}/{postfix}")
     @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
     public Message UserChannel(
-            @Payload RoomMessage roomMessage
-            //, Principal principal
-            //, @Header("simpSessionId") String sessionId
-            , @DestinationVariable String prefix
-            , @DestinationVariable String postfix
-    ) throws Exception {
-//        System.out.println("Session ID: " + sessionId);
+            @Payload RoomMessage roomMessage,
+            @DestinationVariable String prefix,
+            @DestinationVariable String postfix) throws Exception {
         System.out.println(roomMessage);
         String info = String.format("Room message: %s",
                 roomMessage.getRoomMessage());
-//        System.out.println(info);
         Message message = new Message(info);
-//        simpMessageSendingOperations.convertAndSendToUser(
-//                roomMessage.getRoomMessage(),
-//                "/secured/user/queue/specific-room",
-//                message);
         return message;
     }
 

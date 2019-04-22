@@ -28,7 +28,7 @@ function connect() {
         setConnected(true);
         stompClient.subscribe('/secured/user/queue/specific-room'
             + '-user' + sessionId, function (greeting) {
-                showGreeting(JSON.parse(greeting.body).content);
+                showMessage(JSON.parse(greeting.body).content);
         });
     });
 }
@@ -41,34 +41,39 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-// experiment
-function initializeRoom() {
-    stompClient.send("/app/secured/user/send" + url, {}, JSON.stringify({
-        'roomNumber': $("#roomNumber").val(), 'roomMessage': sessionId
-    }));
-}
-
 function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
-}
-
-function sendRoom() {
-    stompClient.send("/app/room_chat", {}, JSON.stringify({'roomNumber': $("#roomNumber").val(),
-                                                        'roomMessage': $("#roomMessage").val()}));
+    stompClient.send("/app/secured/user/hello" + url, {}, JSON.stringify(
+        {'name': $("#hello_name").val()}
+    ));
 }
 
 // experiment
-function sendUserChannel() {
-    stompClient.send("/app/secured/user/send" + url, {}, JSON.stringify({'roomNumber': $("#roomNumber").val(),
-                                                        'roomMessage': $("#roomMessage").val()}));
+function createRoom() {
+    stompClient.send("/app/secured/user/connect" + url, {}, JSON.stringify(
+        {'userName': $("#user_name").val(),
+        'roomName': $("#room_name").val(),
+        'userLanguage': $("#user_lang").val(),
+        'request': 1}
+    ));
+}
+
+function joinRoom() {
+    stompClient.send("/app/secured/user/connect" + url, {}, JSON.stringify(
+        {'userName': $("#user_name").val(),
+        'roomName': $("#room_name").val(),
+        'userLanguage': $("#user_lang").val(),
+        'request': 2}
+    ));
 }
 
 function translate() {
-    stompClient.send("/app/translate_message", {}, JSON.stringify({'messageCH': $("#msgCH").val(),
-                                                                    'messageEN': $("#msgEN").val()}));
+    stompClient.send("/app/translate_message", {}, JSON.stringify(
+        {'messageCH': $("#msgCH").val(),
+        'messageEN': $("#msgEN").val()}
+    ));
 }
 
-function showGreeting(message) {
+function showMessage(message) {
     $("#greetings").append("<tr><td>" + message + "</td></tr>");
 }
 
@@ -79,6 +84,6 @@ $(function () {
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendName(); });
-    $( "#room_send" ).click(function() { initializeRoom(); }) // sendRoom()
-    $( "#trans_send" ).click(function() { translate(); })
+    $( "#create_room" ).click(function() { createRoom(); })
+    $( "#join_room" ).click(function() { joinRoom(); })
 });
