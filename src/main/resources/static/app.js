@@ -48,7 +48,6 @@ function sendName() {
     ));
 }
 
-// TODO
 function createRoom() {
     stompClient.send("/app/secured/user/connect" + url, {}, JSON.stringify(
         {'userName': $("#user_name").val(),
@@ -58,13 +57,19 @@ function createRoom() {
     ));
 }
 
-// TODO
 function joinRoom() {
     stompClient.send("/app/secured/user/connect" + url, {}, JSON.stringify(
         {'userName': $("#user_name").val(),
         'roomName': $("#room_name").val(),
         'userLanguage': $("#user_lang").val(),
         'request': 2}
+    ));
+}
+
+// TODO
+function sendMessage() {
+    stompClient.send("/app/secured/user/send" + url, {}, JSON.stringify(
+        {'content': $("#room_msg").val()}
     ));
 }
 
@@ -89,4 +94,5 @@ $(function () {
     $( "#send" ).click(function() { sendName(); });
     $( "#create_room" ).click(function() { createRoom(); })
     $( "#join_room" ).click(function() { joinRoom(); })
+    $( "#send_msg" ).click(function() { sendMessage(); })
 });

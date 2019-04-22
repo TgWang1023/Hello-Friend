@@ -33,21 +33,19 @@ public class Room {
     }
 
     public boolean joinUser(User joiner) {
+        System.out.print("Join: ");
         if (this.canJoin()) {
+            System.out.println("Success.");
             this.joiner = joiner;
             return true;
         }
+        System.out.println("Failed.");
         return false;
     }
 
     public boolean userQuit(User quitUser) {
         // TODO
         return false;
-    }
-
-    public void sendMessage(String message) {
-        // TODO: translate message to user's preffered language
-        // TODO: send message to all users in the channel
     }
 
     public String[] getSessionIds() {

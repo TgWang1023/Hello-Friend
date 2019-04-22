@@ -34,10 +34,12 @@ public class RoomManager {
         roomNameToRoom.put(joinRequest.getRoomName(), newRoom);
         sessionIdToRoom.put(sessionId, newRoom);
 
+        System.out.println(sessionIdToRoom);
+
         return true;
     }
 
-    public static String joinRoom(
+    public static boolean joinRoom(
             JoinRequest joinRequest,
             String sessionId) {
 
@@ -51,10 +53,16 @@ public class RoomManager {
         if (targetRoom.joinUser(joiner)) {
             System.out.println(targetRoom);
             sessionIdToRoom.put(sessionId, targetRoom);
-            return targetRoom.getOwner().getSessionId();
+            System.out.println(sessionIdToRoom);
+            return true;
         }
 
-        return null;
+        return false;
+    }
+
+    public static String[] getListeners(String sessionId) {
+        Room room = sessionIdToRoom.get(sessionId);
+        return room.getSessionIds();
     }
 
 }

@@ -5,7 +5,7 @@ import edu.ucsb.cs48s19.operators.UserManager;
 import edu.ucsb.cs48s19.templates.HelloMessage;
 import edu.ucsb.cs48s19.templates.JoinRequest;
 import edu.ucsb.cs48s19.templates.Message;
-import edu.ucsb.cs48s19.templates.RoomMessage;
+//import edu.ucsb.cs48s19.templates.RoomMessage;
 //import edu.ucsb.cs48s19.translate.Translator;
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +37,7 @@ public class HelloFriendController {
         if (joinRequest.getRequest() == 1) {
             RoomManager.createRoom(joinRequest, sessionId);
         } else {
-//            String msg = RoomManager.joinRoom(joinRequest, sessionId);
-//            msg = UserManager.getChannel(msg);
+            RoomManager.joinRoom(joinRequest, sessionId);
             return new Message("Join Success.");
         }
         // TODO: send joiner the receiving URL
@@ -56,7 +55,6 @@ public class HelloFriendController {
 
     // Hello message
     @MessageMapping("/secured/user/hello/{prefix}/{postfix}")
-//    @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
     public Message greeting(
             HelloMessage message,
             @DestinationVariable String prefix,
@@ -75,38 +73,24 @@ public class HelloFriendController {
 
     // Room message
     @MessageMapping("/secured/user/send/{prefix}/{postfix}")
-//    @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
-    public Message UserChannel(
-            @Payload RoomMessage roomMessage,
+    public void UserChannel(
+            @Payload Message message,
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
-        System.out.println(roomMessage);
-        String info = String.format("Room message: %s",
-                roomMessage.getRoomMessage());
-        Message message = new Message(info);
-        return message;
-    }
+        System.out.println(message);
 
-    /*
-    @MessageMapping("/translate_message")
-    @SendTo("/room/greetings")
-    public Message TranslateMessage(RoomMessage roomMessage) throws Exception {
-        String msgCH = roomMessage.getMessageCH();
-        String msgEN = roomMessage.getMessageEN();
-        System.out.println(String.format("CH: %s; EN: %s", msgCH, msgEN));
-        String msg;
-        if (msgCH.isEmpty() && !msgEN.isEmpty()) {
-            // translate into CH
-            msg = "Translated Chinese text";
-        } else if (!msgCH.isEmpty() && msgEN.isEmpty()) {
-            // translate into EN
-            // msg = Translator.zh_CN_to_en(msgCH);
-            msg = "Translated English text";
-        } else {
-            msg = "Please input exactly one language.";
+        // TODO: translate message
+
+        String[] listenerList = RoomManager.getListeners(
+                UserManager.getSessionId(prefix, postfix));
+        for (String listener: listenerList) {
+            String dest = String.format(
+                    "/secured/user/queue/specific-room-user/%s",
+                    listener);
+            System.out.println("Send message to " + dest);
+            ops.convertAndSend(dest, message);
         }
-        return new Message(msg);
+
     }
-    */
 
 }

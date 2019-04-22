@@ -6,6 +6,11 @@ public class Message {
 
     public Message() { }
 
+    public Message(Message that) {
+        if (that == null) { return; }
+        this.content = that.content;
+    }
+
     public Message(String content) {
         this.content = content;
     }
@@ -14,4 +19,10 @@ public class Message {
         return content;
     }
 
+    @Override
+    public String toString() {
+        return "Message{" +
+                "content='" + content + '\'' +
+                '}';
+    }
 }
