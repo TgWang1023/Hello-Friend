@@ -23,6 +23,15 @@ import javax.sound.sampled.TargetDataLine;
 
 /** Performs microphone streaming speech recognition with a duration of 1 minute. */
 public class Speech {
+    public static void main(String args[]) {
+        try {
+            streamingMicRecognize();
+        } catch(Exception e) {
+            System.out.println("OMEGALUL");
+        }
+        
+    }
+
     public static void streamingMicRecognize() throws Exception {
 
         ResponseObserver<StreamingRecognizeResponse> responseObserver = null;
@@ -93,7 +102,7 @@ public class Speech {
             long estimatedTime = System.currentTimeMillis() - startTime;
             byte[] data = new byte[6400];
             audio.read(data);
-            if (estimatedTime > 60000) { // 60 seconds
+            if (estimatedTime > 60000) { // 60 second
               System.out.println("Stop speaking.");
               targetDataLine.stop();
               targetDataLine.close();
