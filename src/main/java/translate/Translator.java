@@ -13,7 +13,7 @@ public class Translator {
     // The text to translate
     String text = "Hello, world!";
 
-    // Translates some text into Russian
+    // Translates some text 
     Translation translation =
         translate.translate(
             text,

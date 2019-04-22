@@ -80,7 +80,7 @@
                     <archive>
                         <index>true</index>
                         <manifest>
-                            <mainClass>translate.Speech</mainClass>
+                            <mainClass>translate.SpeechTranslateAPI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
