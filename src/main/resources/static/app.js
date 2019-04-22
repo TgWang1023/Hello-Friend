@@ -1,5 +1,6 @@
 var stompClient = null;
 var sessionId = "";
+var url = null
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -17,7 +18,7 @@ function connect() {
     var socket = new SockJS('/secured/room');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        var url = stompClient.ws._transport.url;
+        url = stompClient.ws._transport.url;
         url = url.replace(
             "ws://localhost:8080/secured/room", "");
         url = url.replace("/websocket", "");
@@ -25,13 +26,9 @@ function connect() {
         console.log("Your current session is: " + url);
         sessionId = url;
         setConnected(true);
-//        console.log('Connected: ' + frame);
-//        stompClient.subscribe('/room/greetings', function (greeting) {
-//            showGreeting(JSON.parse(greeting.body).content);
-//        });
         stompClient.subscribe('/secured/user/queue/specific-room'
             + '-user' + sessionId, function (greeting) {
-                alert(JSON.parse(greeting.body).content);
+                showGreeting(JSON.parse(greeting.body).content);
         });
     });
 }
@@ -42,6 +39,13 @@ function disconnect() {
     }
     setConnected(false);
     console.log("Disconnected");
+}
+
+// experiment
+function initializeRoom() {
+    stompClient.send("/app/secured/user/send" + url, {}, JSON.stringify({
+        'roomNumber': $("#roomNumber").val(), 'roomMessage': sessionId
+    }));
 }
 
 function sendName() {
@@ -55,7 +59,7 @@ function sendRoom() {
 
 // experiment
 function sendUserChannel() {
-    stompClient.send("/app/user_channel", {}, JSON.stringify({'roomNumber': $("#roomNumber").val(),
+    stompClient.send("/app/secured/user/send" + url, {}, JSON.stringify({'roomNumber': $("#roomNumber").val(),
                                                         'roomMessage': $("#roomMessage").val()}));
 }
 
@@ -75,6 +79,6 @@ $(function () {
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendName(); });
-    $( "#room_send" ).click(function() { sendRoom(); }) // sendRoom()
+    $( "#room_send" ).click(function() { initializeRoom(); }) // sendRoom()
     $( "#trans_send" ).click(function() { translate(); })
 });

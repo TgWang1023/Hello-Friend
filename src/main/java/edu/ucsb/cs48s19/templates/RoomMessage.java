@@ -44,4 +44,12 @@ public class RoomMessage {
     public void setMessageCH(String messageCH) {
         this.messageCH = messageCH;
     }
+
+    @Override
+    public String toString() {
+        return "RoomMessage{" +
+                "roomNumber='" + roomNumber + '\'' +
+                ", roomMessage='" + roomMessage + '\'' +
+                '}';
+    }
 }

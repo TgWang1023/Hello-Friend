@@ -5,10 +5,7 @@ import edu.ucsb.cs48s19.templates.Message;
 import edu.ucsb.cs48s19.templates.RoomMessage;
 //import edu.ucsb.cs48s19.translate.Translator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
@@ -41,20 +38,26 @@ public class HelloFriendController {
     }
 
     // experiment: get session ID
-    @MessageMapping("/secured/room")
-    @SendToUser("/queue/reply")
-    public void UserChannel(
-            @Payload RoomMessage roomMessage,
-            Principal principal,
-            @Header("simpSessionId") String sessionId) throws Exception {
-        System.out.println("Session ID: " + sessionId);
+    @MessageMapping("/secured/user/send/{prefix}/{postfix}")
+    @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
+    public Message UserChannel(
+            @Payload RoomMessage roomMessage
+            //, Principal principal
+            //, @Header("simpSessionId") String sessionId
+            , @DestinationVariable String prefix
+            , @DestinationVariable String postfix
+    ) throws Exception {
+//        System.out.println("Session ID: " + sessionId);
+        System.out.println(roomMessage);
         String info = String.format("Room message: %s",
                 roomMessage.getRoomMessage());
-        System.out.println(info);
+//        System.out.println(info);
         Message message = new Message(info);
-        simpMessageSendingOperations.convertAndSendToUser(
-                roomMessage.getRoomNumber(),
-                "/secured/user/queue/specific-room", message);
+//        simpMessageSendingOperations.convertAndSendToUser(
+//                roomMessage.getRoomMessage(),
+//                "/secured/user/queue/specific-room",
+//                message);
+        return message;
     }
 
     @MessageMapping("/translate_message")
