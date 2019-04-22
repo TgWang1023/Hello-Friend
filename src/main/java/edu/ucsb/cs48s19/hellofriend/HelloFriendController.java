@@ -8,6 +8,8 @@ import edu.ucsb.cs48s19.templates.Message;
 import edu.ucsb.cs48s19.templates.RoomMessage;
 //import edu.ucsb.cs48s19.translate.Translator;
 //import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.messaging.handler.annotation.*;
 //import org.springframework.messaging.simp.SimpMessageSendingOperations;
 //import org.springframework.messaging.simp.annotation.SendToUser;
@@ -18,6 +20,9 @@ import org.springframework.web.util.HtmlUtils;
 
 @Controller
 public class HelloFriendController {
+
+    @Autowired
+    MessageSendingOperations ops;
 
     // connect user
     @MessageMapping("/secured/user/connect/{prefix}/{postfix}")
@@ -32,12 +37,12 @@ public class HelloFriendController {
         if (joinRequest.getRequest() == 1) {
             RoomManager.createRoom(joinRequest, sessionId);
         } else {
-            String msg = RoomManager.joinRoom(joinRequest, sessionId);
-            msg = UserManager.getChannel(msg);
-            return new Message(msg);
+//            String msg = RoomManager.joinRoom(joinRequest, sessionId);
+//            msg = UserManager.getChannel(msg);
+            return new Message("Join Success.");
         }
         // TODO: send joiner the receiving URL
-        return new Message("Success.");
+        return new Message("Create Success.");
     }
 
     // disconnect user
@@ -51,16 +56,26 @@ public class HelloFriendController {
 
     // Hello message
     @MessageMapping("/secured/user/hello/{prefix}/{postfix}")
-    @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
-    public Message greeting(HelloMessage message) throws Exception {
+//    @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
+    public Message greeting(
+            HelloMessage message,
+            @DestinationVariable String prefix,
+            @DestinationVariable String postfix
+    ) throws Exception {
         System.out.println("Hello from: " + message.getName());
         Thread.sleep(100); // simulated delay
-        return new Message("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
+        String messageContent = "Hello, "
+                + HtmlUtils.htmlEscape(message.getName()) + "!";
+        String dest = String.format(
+                "/secured/user/queue/specific-room-user/%s/%s",
+                prefix, postfix);
+        ops.convertAndSend(dest, new Message(messageContent));
+        return new Message();
     }
 
     // Room message
     @MessageMapping("/secured/user/send/{prefix}/{postfix}")
-    @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
+//    @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
     public Message UserChannel(
             @Payload RoomMessage roomMessage,
             @DestinationVariable String prefix,

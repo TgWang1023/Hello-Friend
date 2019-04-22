@@ -50,6 +50,19 @@ public class Room {
         // TODO: send message to all users in the channel
     }
 
+    public String[] getSessionIds() {
+        String[] ids;
+        if (this.joiner == null) {
+            ids = new String[1];
+            ids[0] = this.owner.getSessionId();
+        } else {
+            ids = new String[2];
+            ids[0] = this.owner.getSessionId();
+            ids[1] = this.joiner.getSessionId();
+        }
+        return ids;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
