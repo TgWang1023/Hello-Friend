@@ -8,8 +8,10 @@ public class UserManager {
         return String.format("%s/%s", pref, postf);
     }
 
-    public static String[] getChannel(String sessionId) {
-        return sessionId.split("/");
+    public static void removeUser(String pref, String postf) {
+        String sessionId = getSessionId(pref, postf);
+        RoomManager.removeUserFromRoom(sessionId);
     }
+
 
 }

@@ -16,6 +16,8 @@ import org.springframework.messaging.handler.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.validation.constraints.NotNull;
+
 //import java.security.Principal;
 
 @Controller
@@ -28,10 +30,9 @@ public class HelloFriendController {
     @MessageMapping("/secured/user/connect/{prefix}/{postfix}")
     @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
     public Message connectUser(
-            JoinRequest joinRequest,
+            @NotNull JoinRequest joinRequest,
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
-        // TODO: en-list newly connected user
         System.out.println(joinRequest);
         String sessionId = UserManager.getSessionId(prefix, postfix);
         if (joinRequest.getRequest() == 1) {
@@ -55,13 +56,15 @@ public class HelloFriendController {
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
         // TODO: un-list disconnected user
+//        UserManager.getSessionId(prefix, postfix);
+        UserManager.removeUser(prefix, postfix);
         System.out.println("Disconnect user.");
     }
 
     // Hello message
     @MessageMapping("/secured/user/hello/{prefix}/{postfix}")
     public Message greeting(
-            HelloMessage message,
+            @NotNull HelloMessage message,
             @DestinationVariable String prefix,
             @DestinationVariable String postfix
     ) throws Exception {

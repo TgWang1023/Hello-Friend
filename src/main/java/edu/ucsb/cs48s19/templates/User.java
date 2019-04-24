@@ -37,6 +37,10 @@ public class User {
         this.sessionId = sessionId;
     }
 
+    public boolean hasSessionId(String sessionId) {
+        return this.sessionId.compareTo(sessionId) == 0;
+    }
+
     @Override
     public String toString() {
         return "User{" +

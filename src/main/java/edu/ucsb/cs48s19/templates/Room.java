@@ -43,9 +43,16 @@ public class Room {
         return false;
     }
 
-    public boolean userQuit(User quitUser) {
+    public boolean removeUser(String sessionId) {
         // TODO
-        return false;
+        if (this.owner.hasSessionId(sessionId)) {
+            this.owner = this.joiner;
+            this.joiner = null;
+        } else if (this.joiner.hasSessionId(sessionId)) {
+            this.joiner = null;
+        }
+        // return true if need to destroy the room
+        return (this.owner == null);
     }
 
     public String[] getSessionIds() {

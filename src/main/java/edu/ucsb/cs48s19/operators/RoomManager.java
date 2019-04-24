@@ -64,9 +64,25 @@ public class RoomManager {
         return false;
     }
 
+    private static void removeRoom(Room room) {
+        String roomName = room.getName();
+        roomNameToRoom.remove(roomName);
+    }
+
     public static String[] getListeners(String sessionId) {
         Room room = sessionIdToRoom.get(sessionId);
         return room.getSessionIds();
+    }
+
+    static void removeUserFromRoom(String sessionId) {
+        Room room = sessionIdToRoom.get(sessionId);
+        if (room == null) { return; }
+        boolean flag = room.removeUser(sessionId);
+        sessionIdToRoom.remove(sessionId);
+        if (flag) {
+            System.out.println("Remove room.");
+            removeRoom(room);
+        }
     }
 
 }
