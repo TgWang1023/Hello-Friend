@@ -40,7 +40,7 @@
     <!-- My Experimental Section -->
     <!-- Room Message Area-->
     <div class="row">
-        <form class="form-inline">
+        <form id="room_form" class="form-inline">
             <div class="form-group">
                 <label for="name">Room Section:</label>
                 <input type="text" id="user_name" class="form-control" placeholder="Tom">
@@ -52,9 +52,11 @@
         </form>
     </div>
     <div class="row">
-        <form class="form-inline">
-            <label for="name">Chat Section:</label>
-            <input type="text" id="room_msg" class="form-control" placeholder="Hello!">
+        <form id="message_form" class="form-inline">
+            <div class="form-group">
+                <label for="name">Chat Section:</label>
+                <input type="text" id="room_msg" class="form-control" placeholder="Hello!">
+            </div>
             <button id="send_msg" class="btn btn-default" type="submit">Send Message</button>
         </form>
     </div>

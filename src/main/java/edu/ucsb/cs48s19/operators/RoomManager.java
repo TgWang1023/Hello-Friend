@@ -49,6 +49,10 @@ public class RoomManager {
         System.out.println(joiner);
         Room targetRoom = roomNameToRoom.get(joinRequest.getRoomName());
 
+        if (targetRoom == null) {
+            System.out.println("No name doesn't accord any room!");
+            return false;
+        }
 
         if (targetRoom.joinUser(joiner)) {
             System.out.println(targetRoom);

@@ -22,7 +22,7 @@ import org.springframework.web.util.HtmlUtils;
 public class HelloFriendController {
 
     @Autowired
-    MessageSendingOperations ops;
+    private MessageSendingOperations ops;
 
     // connect user
     @MessageMapping("/secured/user/connect/{prefix}/{postfix}")
@@ -35,13 +35,18 @@ public class HelloFriendController {
         System.out.println(joinRequest);
         String sessionId = UserManager.getSessionId(prefix, postfix);
         if (joinRequest.getRequest() == 1) {
-            RoomManager.createRoom(joinRequest, sessionId);
+            boolean flag = RoomManager.createRoom(joinRequest, sessionId);
+            if (!flag) {
+                return new Message("This room name has been occupied.");
+            }
+            return new Message("Create Success.");
         } else {
-            RoomManager.joinRoom(joinRequest, sessionId);
+            boolean flag = RoomManager.joinRoom(joinRequest, sessionId);
+            if (!flag) {
+                return new Message("Join Failed. No such room or the room is full.");
+            }
             return new Message("Join Success.");
         }
-        // TODO: send joiner the receiving URL
-        return new Message("Create Success.");
     }
 
     // disconnect user

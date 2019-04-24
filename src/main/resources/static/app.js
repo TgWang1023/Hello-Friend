@@ -7,9 +7,12 @@ function setConnected(connected) {
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
         $("#conversation").show();
+        $("#room_form").show();
     }
     else {
         $("#conversation").hide();
+        $("#room_form").hide();
+        $("#message_form").hide();
     }
     $("#greetings").html("");
 }
@@ -55,6 +58,8 @@ function createRoom() {
         'userLanguage': $("#user_lang").val(),
         'request': 1}
     ));
+    $("#room_form").hide();
+    $("#message_form").show();
 }
 
 function joinRoom() {
@@ -64,22 +69,15 @@ function joinRoom() {
         'userLanguage': $("#user_lang").val(),
         'request': 2}
     ));
+    $("#room_form").hide();
+    $("#message_form").show();
 }
 
-// TODO
 function sendMessage() {
     stompClient.send("/app/secured/user/send" + url, {}, JSON.stringify(
         {'content': $("#room_msg").val()}
     ));
 }
-
-/*
-function translate() {
-    stompClient.send("/app/translate_message", {}, JSON.stringify(
-        {'messageCH': $("#msgCH").val(),
-        'messageEN': $("#msgEN").val()}
-    ));
-}*/
 
 function showMessage(message) {
     $("#greetings").append("<tr><td>" + message + "</td></tr>");
@@ -95,4 +93,5 @@ $(function () {
     $( "#create_room" ).click(function() { createRoom(); })
     $( "#join_room" ).click(function() { joinRoom(); })
     $( "#send_msg" ).click(function() { sendMessage(); })
+    setConnected(false)
 });

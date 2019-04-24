@@ -28,7 +28,7 @@ public class Room {
         return owner != null && joiner != null;
     }
 
-    public boolean canJoin() {
+    private boolean canJoin() {
         return joiner == null;
     }
 
