@@ -13,7 +13,7 @@ public class User {
         this.sessionId = sessionId;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
@@ -29,7 +29,7 @@ public class User {
         this.language = language;
     }
 
-    public String getSessionId() {
+    String getSessionId() {
         return sessionId;
     }
 
@@ -37,7 +37,7 @@ public class User {
         this.sessionId = sessionId;
     }
 
-    public boolean hasSessionId(String sessionId) {
+    boolean hasSessionId(String sessionId) {
         return this.sessionId.compareTo(sessionId) == 0;
     }
 
