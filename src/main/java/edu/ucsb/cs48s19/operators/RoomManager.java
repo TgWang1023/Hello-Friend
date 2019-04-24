@@ -27,14 +27,14 @@ public class RoomManager {
         User owner = new User(joinRequest.getUserName(),
                 joinRequest.getUserLanguage(),
                 sessionId);
-        System.out.println(owner);
+//        System.out.println(owner);
         Room newRoom = new Room(joinRequest.getRoomName(), owner);
-        System.out.println(newRoom);
+//        System.out.println(newRoom);
 
         roomNameToRoom.put(joinRequest.getRoomName(), newRoom);
         sessionIdToRoom.put(sessionId, newRoom);
 
-        System.out.println(sessionIdToRoom);
+//        System.out.println(sessionIdToRoom);
 
         return true;
     }
@@ -46,7 +46,7 @@ public class RoomManager {
         User joiner = new User(joinRequest.getUserName(),
                 joinRequest.getUserLanguage(),
                 sessionId);
-        System.out.println(joiner);
+//        System.out.println(joiner);
         Room targetRoom = roomNameToRoom.get(joinRequest.getRoomName());
 
         if (targetRoom == null) {
@@ -55,9 +55,9 @@ public class RoomManager {
         }
 
         if (targetRoom.joinUser(joiner)) {
-            System.out.println(targetRoom);
+//            System.out.println(targetRoom);
             sessionIdToRoom.put(sessionId, targetRoom);
-            System.out.println(sessionIdToRoom);
+//            System.out.println(sessionIdToRoom);
             return true;
         }
 
@@ -69,12 +69,28 @@ public class RoomManager {
         roomNameToRoom.remove(roomName);
     }
 
-    public static String[] getListeners(String sessionId) {
+    public static String getSessionId(String pref, String postf) {
+        return String.format("%s/%s", pref, postf);
+    }
+
+    private static String[] getListeners(String sessionId) {
         Room room = sessionIdToRoom.get(sessionId);
+        if (room == null) {
+            return new String[0];
+        }
         return room.getSessionIds();
     }
 
-    static void removeUserFromRoom(String sessionId) {
+    public static String[] getListeners(String pref, String postf) {
+        return getListeners(getSessionId(pref, postf));
+    }
+
+    public static void removeUser(String pref, String postf) {
+        String sessionId = getSessionId(pref, postf);
+        RoomManager.removeUserFromRoom(sessionId);
+    }
+
+    private static void removeUserFromRoom(String sessionId) {
         Room room = sessionIdToRoom.get(sessionId);
         if (room == null) { return; }
         boolean flag = room.removeUser(sessionId);
@@ -84,5 +100,6 @@ public class RoomManager {
             removeRoom(room);
         }
     }
+
 
 }

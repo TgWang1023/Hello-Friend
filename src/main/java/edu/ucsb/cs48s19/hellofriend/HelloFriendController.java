@@ -1,7 +1,6 @@
 package edu.ucsb.cs48s19.hellofriend;
 
 import edu.ucsb.cs48s19.operators.RoomManager;
-import edu.ucsb.cs48s19.operators.UserManager;
 import edu.ucsb.cs48s19.templates.HelloMessage;
 import edu.ucsb.cs48s19.templates.JoinRequest;
 import edu.ucsb.cs48s19.templates.Message;
@@ -34,7 +33,7 @@ public class HelloFriendController {
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
         System.out.println(joinRequest);
-        String sessionId = UserManager.getSessionId(prefix, postfix);
+        String sessionId = RoomManager.getSessionId(prefix, postfix);
         if (joinRequest.getRequest() == 1) {
             boolean flag = RoomManager.createRoom(joinRequest, sessionId);
             if (!flag) {
@@ -56,12 +55,12 @@ public class HelloFriendController {
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
         // TODO: un-list disconnected user
-//        UserManager.getSessionId(prefix, postfix);
-        UserManager.removeUser(prefix, postfix);
+        RoomManager.removeUser(prefix, postfix);
         System.out.println("Disconnect user.");
     }
 
     // Hello message
+    /*
     @MessageMapping("/secured/user/hello/{prefix}/{postfix}")
     public Message greeting(
             @NotNull HelloMessage message,
@@ -78,10 +77,11 @@ public class HelloFriendController {
         ops.convertAndSend(dest, new Message(messageContent));
         return new Message();
     }
+     */
 
     // Room message
     @MessageMapping("/secured/user/send/{prefix}/{postfix}")
-    public void UserChannel(
+    public void channelMessage(
             @Payload Message message,
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
@@ -89,8 +89,7 @@ public class HelloFriendController {
 
         // TODO: translate message
 
-        String[] listenerList = RoomManager.getListeners(
-                UserManager.getSessionId(prefix, postfix));
+        String[] listenerList = RoomManager.getListeners(prefix, postfix);
         for (String listener: listenerList) {
             String dest = String.format(
                     "/secured/user/queue/specific-room-user/%s",
