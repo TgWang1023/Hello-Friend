@@ -1,23 +1,16 @@
 package edu.ucsb.cs48s19.hellofriend;
 
 import edu.ucsb.cs48s19.operators.RoomManager;
-import edu.ucsb.cs48s19.templates.HelloMessage;
 import edu.ucsb.cs48s19.templates.JoinRequest;
 import edu.ucsb.cs48s19.templates.Message;
-//import edu.ucsb.cs48s19.templates.RoomMessage;
 //import edu.ucsb.cs48s19.translate.Translator;
-//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.messaging.handler.annotation.*;
-//import org.springframework.messaging.simp.SimpMessageSendingOperations;
-//import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
 
 import javax.validation.constraints.NotNull;
 
-//import java.security.Principal;
 
 @Controller
 public class HelloFriendController {
@@ -54,30 +47,9 @@ public class HelloFriendController {
     public void disconnectUser(
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
-        // TODO: un-list disconnected user
         RoomManager.removeUser(prefix, postfix);
         System.out.println("Disconnect user.");
     }
-
-    // Hello message
-    /*
-    @MessageMapping("/secured/user/hello/{prefix}/{postfix}")
-    public Message greeting(
-            @NotNull HelloMessage message,
-            @DestinationVariable String prefix,
-            @DestinationVariable String postfix
-    ) throws Exception {
-        System.out.println("Hello from: " + message.getName());
-        Thread.sleep(100); // simulated delay
-        String messageContent = "Hello, "
-                + HtmlUtils.htmlEscape(message.getName()) + "!";
-        String dest = String.format(
-                "/secured/user/queue/specific-room-user/%s/%s",
-                prefix, postfix);
-        ops.convertAndSend(dest, new Message(messageContent));
-        return new Message();
-    }
-     */
 
     // Room message
     @MessageMapping("/secured/user/send/{prefix}/{postfix}")
@@ -97,7 +69,6 @@ public class HelloFriendController {
             System.out.println("Send message to " + dest);
             ops.convertAndSend(dest, message);
         }
-
     }
 
 }

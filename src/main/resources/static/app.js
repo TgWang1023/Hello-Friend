@@ -45,12 +45,6 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
-    stompClient.send("/app/secured/user/hello" + url, {}, JSON.stringify(
-        {'name': $("#hello_name").val()}
-    ));
-}
-
 function createRoom() {
     stompClient.send("/app/secured/user/connect" + url, {}, JSON.stringify(
         {'userName': $("#user_name").val(),
@@ -89,7 +83,6 @@ $(function () {
     });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
     $( "#create_room" ).click(function() { createRoom(); })
     $( "#join_room" ).click(function() { joinRoom(); })
     $( "#send_msg" ).click(function() { sendMessage(); })
