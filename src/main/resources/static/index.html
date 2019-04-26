@@ -17,8 +17,6 @@
 
 <body>
 <div class="container">
-
-
     <div class="product">
 
         <!-- connect and disconnect -->
@@ -43,14 +41,14 @@
                 <li class="tab-item">Join</li>
             </ul>
 
-
+            <!-- create section -->
             <div id="card">
                 <div class="mod-box selected">
                     <div id="create_room_section" class="mod-box-content">
                         <form action="" method="post">
                             <div style="position: relative;">
                                 <div class="form-item">
-                                    <label class="s-label mb4" for="room">Your Name</label>
+                                    <label class="s-label mb4">Your Name</label>
                                     <input type="text" id="user_name" name="name"
                                            placeholder="Tom" class="s-input">
                                 </div>
@@ -58,7 +56,7 @@
 
                             <div style="position: relative;">
                                 <div class="form-item">
-                                    <label class="s-label mb4" for="room">Your Language</label>
+                                    <label class="s-label mb4">Your Language</label>
                                     <input type="text" id="user_lang" name="language"
                                            placeholder="English" class="s-input">
                                 </div>
@@ -66,28 +64,30 @@
 
                             <div style="position: relative;">
                                 <div class="form-item">
-                                    <label class="s-label mb4" for="room">Room Name</label>
+                                    <label class="s-label mb4">Room Name</label>
                                     <input type="text" id="room_name" name="roomN"
                                            placeholder="12345" class="s-input">
                                 </div>
                             </div>
 
                             <div>
-                                <button id="create_room" class="s-btn" type="submit" tabindex="120" autocomplete="off">
+                                <button id="create_room" class="s-btn" type="submit" tabindex="120">
                                     create a room
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
+                <!-- create section ends -->
 
+                <!-- join section -->
                 <div class="mod-box">
                     <div id="join_room_section" class="mod-box-content">
                         <form action="" method="post">
 
                             <div style="position: relative;">
                                 <div class="form-item">
-                                    <label class="s-label mb4" for="room">Your Name</label>
+                                    <label class="s-label mb4">Your Name</label>
                                     <input type="text" id="join_user_name" name="name"
                                            placeholder="Jerry" class="s-input">
                                 </div>
@@ -95,7 +95,7 @@
 
                             <div style="position: relative;">
                                 <div class="form-item">
-                                    <label class="s-label mb4" for="room">Your Language</label>
+                                    <label class="s-label mb4">Your Language</label>
                                     <input type="text" id="join_user_lang" name="language"
                                            placeholder="English" class="s-input">
                                 </div>
@@ -103,20 +103,22 @@
 
                             <div style="position: relative;">
                                 <div class="form-item">
-                                    <label class="s-label mb4" for="room">Room Name</label>
+                                    <label class="s-label mb4">Room Name</label>
                                     <input type="text" id="join_room_name" name="roomN"
                                            placeholder="12345" class="s-input">
                                 </div>
                             </div>
 
                             <div>
-                                <button id="join_room" class="s-btn" type="submit" tabindex="120" autocomplete="off">
+                                <button id="join_room" class="s-btn" type="submit" tabindex="120">
                                     join a room
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
+                <!-- join section ends -->
+
             </div>
         </div>
         <!-- create/join room section ends -->
@@ -125,7 +127,7 @@
         <div class="row">
             <form id="message_form" class="form-inline">
                 <div class="form-group">
-                    <label for="name">Chat Section:</label>
+                    <label for="room_msg">Chat Section:</label>
                     <input type="text" id="room_msg" class="form-control" placeholder="Hello!">
                 </div>
                 <button id="send_msg" class="btn btn-default" type="submit">Send Message</button>
