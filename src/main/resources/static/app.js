@@ -52,7 +52,7 @@ function createRoom() {
         'userLanguage': $("#user_lang").val(),
         'request': 1}
     ));
-    $("#room_form").show();
+    $("#room_form").hide();
     $("#message_form").show();
 }
 
@@ -63,7 +63,7 @@ function joinRoom() {
         'userLanguage': $("#join_user_lang").val(),
         'request': 2}
     ));
-    $("#room_form").show();
+    $("#room_form").hide();
     $("#message_form").show();
 }
 

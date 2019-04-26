@@ -19,7 +19,6 @@
 <div class="container">
 
 
-    <!-- form section -->
     <div class="product">
 
         <!-- connect and disconnect -->
@@ -37,90 +36,92 @@
         </div>
         <!-- connect and disconnect ends -->
 
+        <!-- create/join room section -->
+        <div id="room_form">
+            <ul class="tab">
+                <li class="tab-item active">Create</li>
+                <li class="tab-item">Join</li>
+            </ul>
 
-        <ul class="tab">
-            <li class="tab-item active">Create</li>
-            <li class="tab-item">Join</li>
-        </ul>
 
-
-        <div id="card">
-            <div class="mod-box selected">
-                <div id="create_room_section" class="mod-box-content">
-                    <form action="" method="post">
-                        <div style="position: relative;">
-                            <div class="form-item">
-                                <label class="s-label mb4" for="room">Your Name</label>
-                                <input type="text" id="user_name" name="name"
-                                       placeholder="Tom" class="s-input">
+            <div id="card">
+                <div class="mod-box selected">
+                    <div id="create_room_section" class="mod-box-content">
+                        <form action="" method="post">
+                            <div style="position: relative;">
+                                <div class="form-item">
+                                    <label class="s-label mb4" for="room">Your Name</label>
+                                    <input type="text" id="user_name" name="name"
+                                           placeholder="Tom" class="s-input">
+                                </div>
                             </div>
-                        </div>
 
-                        <div style="position: relative;">
-                            <div class="form-item">
-                                <label class="s-label mb4" for="room">Your Language</label>
-                                <input type="text" id="user_lang" name="language"
-                                       placeholder="English" class="s-input">
+                            <div style="position: relative;">
+                                <div class="form-item">
+                                    <label class="s-label mb4" for="room">Your Language</label>
+                                    <input type="text" id="user_lang" name="language"
+                                           placeholder="English" class="s-input">
+                                </div>
                             </div>
-                        </div>
 
-                        <div style="position: relative;">
-                            <div class="form-item">
-                                <label class="s-label mb4" for="room">Room Name</label>
-                                <input type="text" id="room_name" name="roomN"
-                                       placeholder="12345" class="s-input">
+                            <div style="position: relative;">
+                                <div class="form-item">
+                                    <label class="s-label mb4" for="room">Room Name</label>
+                                    <input type="text" id="room_name" name="roomN"
+                                           placeholder="12345" class="s-input">
+                                </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <button id="create_room" class="s-btn" type="submit" tabindex="120" autocomplete="off">
-                                create a room
-                            </button>
-                        </div>
-                    </form>
+                            <div>
+                                <button id="create_room" class="s-btn" type="submit" tabindex="120" autocomplete="off">
+                                    create a room
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
-            <div class="mod-box">
-                <div id="join_room_section" class="mod-box-content">
-                    <form action="" method="post">
+                <div class="mod-box">
+                    <div id="join_room_section" class="mod-box-content">
+                        <form action="" method="post">
 
-                        <div style="position: relative;">
-                            <div class="form-item">
-                                <label class="s-label mb4" for="room">Your Name</label>
-                                <input type="text" id="join_user_name" name="name"
-                                       placeholder="Jerry" class="s-input">
+                            <div style="position: relative;">
+                                <div class="form-item">
+                                    <label class="s-label mb4" for="room">Your Name</label>
+                                    <input type="text" id="join_user_name" name="name"
+                                           placeholder="Jerry" class="s-input">
+                                </div>
                             </div>
-                        </div>
 
-                        <div style="position: relative;">
-                            <div class="form-item">
-                                <label class="s-label mb4" for="room">Your Language</label>
-                                <input type="text" id="join_user_lang" name="language"
-                                       placeholder="English" class="s-input">
+                            <div style="position: relative;">
+                                <div class="form-item">
+                                    <label class="s-label mb4" for="room">Your Language</label>
+                                    <input type="text" id="join_user_lang" name="language"
+                                           placeholder="English" class="s-input">
+                                </div>
                             </div>
-                        </div>
 
-                        <div style="position: relative;">
-                            <div class="form-item">
-                                <label class="s-label mb4" for="room">Room Name</label>
-                                <input type="text" id="join_room_name" name="roomN"
-                                       placeholder="12345" class="s-input">
+                            <div style="position: relative;">
+                                <div class="form-item">
+                                    <label class="s-label mb4" for="room">Room Name</label>
+                                    <input type="text" id="join_room_name" name="roomN"
+                                           placeholder="12345" class="s-input">
+                                </div>
                             </div>
-                        </div>
 
-                        <div>
-                            <button id="join_room" class="s-btn" type="submit" tabindex="120" autocomplete="off">
-                                join a room
-                            </button>
-                        </div>
-                    </form>
+                            <div>
+                                <button id="join_room" class="s-btn" type="submit" tabindex="120" autocomplete="off">
+                                    join a room
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- form section ends -->
+        <!-- create/join room section ends -->
 
-        <!-- chat section starts -->
+        <!-- chat section -->
         <div class="row">
             <form id="message_form" class="form-inline">
                 <div class="form-group">
@@ -130,6 +131,7 @@
                 <button id="send_msg" class="btn btn-default" type="submit">Send Message</button>
             </form>
         </div>
+        <!-- chat section ends -->
 
         <div class="row">
             <div class="col-md-12">
@@ -144,7 +146,6 @@
                 </table>
             </div>
         </div>
-
     </div>
 </div>
 </body>
