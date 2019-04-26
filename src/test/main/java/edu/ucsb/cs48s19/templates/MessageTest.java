@@ -16,7 +16,7 @@ public class MessageTest {
     
     @Test
     public void test_getContent() {
-	assertEquals("this is a test", testMessage.getContent());
+	assertEquals("this is NOT a test", testMessage.getContent());
     }
 
 }
