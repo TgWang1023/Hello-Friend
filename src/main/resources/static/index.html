@@ -1,82 +1,161 @@
+<!-- switch 控制tab切换 -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello WebSocket</title>
     <meta charset="utf-8">
+    <title>Hello-Friend-Home</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/main.css" rel="stylesheet">
+    <!--  <link href="/static/css/main.css" rel="stylesheet">-->
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/app.js"></script>
+    <script type='text/javascript' src="/app.js"></script>
+    <!-- <script type='text/javascript' src="../static/js/home.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="./css/home.css"/>
 </head>
+
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
+<div class="container">
+
+
+    <!-- form section -->
+    <div class="product">
+
+        <!-- connect and disconnect -->
+        <div class="row">
+            <div class="col-md-6">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="connect">Connect to the server:</label>
+                        <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                        <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- connect and disconnect ends -->
+
+
+        <ul class="tab">
+            <li class="tab-item active">Create</li>
+            <li class="tab-item">Join</li>
+        </ul>
+
+
+        <div id="card">
+            <div class="mod-box selected">
+                <div id="create_room_section" class="mod-box-content">
+                    <form action="" method="post">
+                        <div style="position: relative;">
+                            <div class="form-item">
+                                <label class="s-label mb4" for="room">Your Name</label>
+                                <input type="text" id="user_name" name="name"
+                                       placeholder="Tom" class="s-input">
+                            </div>
+                        </div>
+
+                        <div style="position: relative;">
+                            <div class="form-item">
+                                <label class="s-label mb4" for="room">Your Language</label>
+                                <input type="text" id="user_lang" name="language"
+                                       placeholder="English" class="s-input">
+                            </div>
+                        </div>
+
+                        <div style="position: relative;">
+                            <div class="form-item">
+                                <label class="s-label mb4" for="room">Room Name</label>
+                                <input type="text" id="room_name" name="roomN"
+                                       placeholder="12345" class="s-input">
+                            </div>
+                        </div>
+
+                        <div>
+                            <button id="create_room" class="s-btn" type="submit" tabindex="120" autocomplete="off">
+                                create a room
+                            </button>
+                        </div>
+                    </form>
                 </div>
+            </div>
+
+            <div class="mod-box">
+                <div id="join_room_section" class="mod-box-content">
+                    <form action="" method="post">
+
+                        <div style="position: relative;">
+                            <div class="form-item">
+                                <label class="s-label mb4" for="room">Your Name</label>
+                                <input type="text" id="join_user_name" name="name"
+                                       placeholder="Jerry" class="s-input">
+                            </div>
+                        </div>
+
+                        <div style="position: relative;">
+                            <div class="form-item">
+                                <label class="s-label mb4" for="room">Your Language</label>
+                                <input type="text" id="join_user_lang" name="language"
+                                       placeholder="English" class="s-input">
+                            </div>
+                        </div>
+
+                        <div style="position: relative;">
+                            <div class="form-item">
+                                <label class="s-label mb4" for="room">Room Name</label>
+                                <input type="text" id="join_room_name" name="roomN"
+                                       placeholder="12345" class="s-input">
+                            </div>
+                        </div>
+
+                        <div>
+                            <button id="join_room" class="s-btn" type="submit" tabindex="120" autocomplete="off">
+                                join a room
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- form section ends -->
+
+        <!-- chat section starts -->
+        <div class="row">
+            <form id="message_form" class="form-inline">
+                <div class="form-group">
+                    <label for="name">Chat Section:</label>
+                    <input type="text" id="room_msg" class="form-control" placeholder="Hello!">
+                </div>
+                <button id="send_msg" class="btn btn-default" type="submit">Send Message</button>
             </form>
         </div>
-    </div>
 
-    <!-- My Experimental Section -->
-    <!-- Room Message Area-->
-    <div class="row">
-        <form id="room_form" class="form-inline">
-            <div class="form-group">
-                <label for="name">Room Section:</label>
-                <input type="text" id="user_name" class="form-control" placeholder="Tom">
-                <input type="text" id="user_lang" class="form-control" placeholder="zh-CH">
-                <input type="text" id="room_name" class="form-control" placeholder="1234">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="conversation" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Messages</th>
+                    </tr>
+                    </thead>
+                    <tbody id="greetings">
+                    </tbody>
+                </table>
             </div>
-            <button id="create_room" class="btn btn-default" type="submit">Create a Room</button>
-            <button id="join_room" class="btn btn-default" type="submit">Join a Room</button>
-        </form>
-    </div>
-    <div class="row">
-        <form id="message_form" class="form-inline">
-            <div class="form-group">
-                <label for="name">Chat Section:</label>
-                <input type="text" id="room_msg" class="form-control" placeholder="Hello!">
-            </div>
-            <button id="send_msg" class="btn btn-default" type="submit">Send Message</button>
-        </form>
-    </div>
-    <!-- Translate Area -->
-    <!--<div class="row">-->
-        <!--<form class="form-inline">-->
-            <!--<div class="form-group">-->
-                <!--<label for="name">Message Area:</label>-->
-                <!--<input type="text" id="msgCH" class="form-control" placeholder="你好">-->
-                <!--<input type="text" id="msgEN" class="form-control" placeholder="Hello">-->
-            <!--</div>-->
-            <!--<button id="trans_send" class="btn btn-default" type="submit">Send to Translate</button>-->
-        <!--</form>-->
-    <!--</div>-->
-    <!-- My Experimental Section -->
-
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Messages</th>
-                </tr>
-                </thead>
-                <tbody id="greetings">
-                </tbody>
-            </table>
         </div>
+
     </div>
 </div>
 </body>
-</html>
+
+<script type="text/javascript">
+$(function(){
+//控制tab切换
+$("#card .mod-box").eq(0).show().siblings().hide();
+$(".tab-item").click(function () {
+  $(this).addClass("active").siblings().removeClass("active");
+  $("#card .mod-box").eq($(this).index()).show().siblings().hide();
+})});
+
+</script>

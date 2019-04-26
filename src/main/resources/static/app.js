@@ -52,18 +52,18 @@ function createRoom() {
         'userLanguage': $("#user_lang").val(),
         'request': 1}
     ));
-    $("#room_form").hide();
+    $("#room_form").show();
     $("#message_form").show();
 }
 
 function joinRoom() {
     stompClient.send("/app/secured/user/connect" + url, {}, JSON.stringify(
-        {'userName': $("#user_name").val(),
-        'roomName': $("#room_name").val(),
-        'userLanguage': $("#user_lang").val(),
+        {'userName': $("#join_user_name").val(),
+        'roomName': $("#join_room_name").val(),
+        'userLanguage': $("#join_user_lang").val(),
         'request': 2}
     ));
-    $("#room_form").hide();
+    $("#room_form").show();
     $("#message_form").show();
 }
 
