@@ -1,4 +1,4 @@
-package translate;
+package edu.ucsb.cs48s19.translate;
 // Imports the Google Cloud client library
 import com.google.api.gax.rpc.ClientStream;
 import com.google.api.gax.rpc.ResponseObserver;
