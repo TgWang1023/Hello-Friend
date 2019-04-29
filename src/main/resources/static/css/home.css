@@ -18,10 +18,24 @@ font-family: 'Lato', sans-serif;
  }
 
  .product{
-   width:360px;
-   margin-top: 360px;
+   width:400px;
    margin-left: auto;
    margin-right: auto;
+ }
+
+ #logo{
+   color:#fff5eb;
+   font-size: 40px;
+   margin-left: auto;
+   margin-right: auto;
+ }
+ .form-group{
+   width:400px;
+   display:inline;
+   justify-content: center;
+ }
+ .row{
+   margin-bottom: 8px;
  }
 
  .card{
@@ -58,10 +72,11 @@ font-family: 'Lato', sans-serif;
  }
 
  .s-btn{
+     width:180px;
      background-color: #4CAF50;
      border: none;
      color: white;
-     padding: 15px 32px;
+     padding: 15px 5px;
      text-align: center;
      text-decoration: none;
      display: inline-block;
@@ -77,14 +92,14 @@ font-family: 'Lato', sans-serif;
    padding:0;
   border-bottom: 0;
    height: 36px;
-   width: 360px;
+   width: 400px;
  }
 
  .tab li {
    font-size: 30px;
    position: relative;
    float: left;
-   width: 180px;
+   width: 200px;
    height: 34px;
    line-height: 34px;
    text-align: center;
@@ -123,3 +138,49 @@ font-family: 'Lato', sans-serif;
    margin-left: auto;
    margin-right: auto;
  }
+
+ #chat_section{
+   border-top: 5px, solid, white;
+ }
+ #section_title{
+   margin-left: auto;
+   margin-right: auto;
+   color: #085f63;
+   font-size: 30px;
+ }
+
+#conversation{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  overflow-y:scroll;
+  margin-left: auto;
+  margin-right: auto;
+  width:400px;
+  height:420px;
+  border:3px solid white;
+  border-radius: 4px;
+}
+
+.msg_container{
+  word-wrap: break-word;
+  margin-left: 2px;
+  width:250px;
+  margin-top: 5px;
+  border: 2px solid #085f63;
+  border-radius: 3px;
+}
+
+.msg300px{
+  height:40px;
+  background-color: Transparent;
+  color: white;
+  width:250px;
+}
+.msgbtn{
+  margin-left: 2px;
+  color:white;
+  height:40px;
+  background-color: Transparent;
+  border:5px solid #085f6;
+  border-radius: 3px;
+}

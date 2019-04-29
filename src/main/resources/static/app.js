@@ -6,15 +6,16 @@ function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
-        $("#conversation").show();
         $("#room_form").show();
+
     }
     else {
+        $("#section_title").hide();
         $("#conversation").hide();
         $("#room_form").hide();
         $("#message_form").hide();
     }
-    $("#greetings").html("");
+    $("#conversation").html("");
 }
 
 function connect() {
@@ -52,8 +53,12 @@ function createRoom() {
         'userLanguage': $("#user_lang").val(),
         'request': 1}
     ));
+    $("logo").hide();
     $("#room_form").hide();
     $("#message_form").show();
+    $("#section_title").show();
+    $("#conversation").show();
+
 }
 
 function joinRoom() {
@@ -63,8 +68,12 @@ function joinRoom() {
         'userLanguage': $("#join_user_lang").val(),
         'request': 2}
     ));
+    $("logo").hide();
     $("#room_form").hide();
+
     $("#message_form").show();
+    $("#section_title").show();
+    $("#conversation").show();
 }
 
 function sendMessage() {
@@ -74,7 +83,7 @@ function sendMessage() {
 }
 
 function showMessage(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+    $("#conversation").append("<div class=\"msg_container\">" + message + "</div>");
 }
 
 $(function () {
