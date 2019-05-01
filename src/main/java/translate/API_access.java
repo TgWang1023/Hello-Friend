@@ -77,43 +77,15 @@ public class API_access {
     // For detailed availibility of text translation codes, visit https://cloud.google.com/translate/docs/languages
     // For detailed availibility of speech codes, visit https://cloud.google.com/speech-to-text/docs/languages
     public static ArrayList<String> speech_translate(String file_path, String speech_code, String source_code, String target_code) throws Exception {
-        try (SpeechClient speech = SpeechClient.create()) {
-            Path path = Paths.get(file_path);
-            byte[] data = Files.readAllBytes(path);
-            ByteString audioBytes = ByteString.copyFrom(data);
-        
-            // Configure request with local raw PCM audio
-            RecognitionConfig config =
-                RecognitionConfig.newBuilder()
-                    .setEncoding(AudioEncoding.LINEAR16)
-                    .setLanguageCode(speech_code)
-                    .setSampleRateHertz(16000)
-                    .build();
-            RecognitionAudio audio = RecognitionAudio.newBuilder().setContent(audioBytes).build();
-        
-            // Use blocking call to get audio transcript
-            RecognizeResponse response = speech.recognize(config, audio);
-            List<SpeechRecognitionResult> results = response.getResultsList();
-            ArrayList<String> result_text = new ArrayList<String>();
-
-            // Instantiates a client
-            Translate translate = TranslateOptions.getDefaultInstance().getService();
-
-            // Translates some text 
-            for (SpeechRecognitionResult result : results) {
-                // There can be several alternative transcripts for a given chunk of speech. Just use the
-                // first (most likely) one here.
-                SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
-                String orig_text = alternative.getTranscript().toString();
-                Translation translation =
-                translate.translate(
-                    orig_text,
-                    TranslateOption.sourceLanguage(source_code),
-                    TranslateOption.targetLanguage(target_code));
-                result_text.add(translation.getTranslatedText());
-            }
-
-            return result_text;
+        // Speech gathering
+        ArrayList<String> orig_text = speech(file_path, speech_code);
+  
+        // Speech translation
+        ArrayList<String> result_text = new ArrayList<String>();
+        for(String single_orig_text : orig_text) {
+            result_text.add(translate(single_orig_text, source_code, target_code));
         }
+
+        return result_text;
     }
 }
