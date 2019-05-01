@@ -79,6 +79,7 @@ public class API_access {
     // file_path: file path to a PCM audio file to transcribe. speech_code: Speech language rep code. source_code: Source language rep code. target_code: Target language rep code.
     // For detailed availibility of text translation codes, visit https://cloud.google.com/translate/docs/languages
     // For detailed availibility of speech codes, visit https://cloud.google.com/speech-to-text/docs/languages
+    // ****** IMPORTANT: SPEECH CODES ARE DIFFERENT FROM TEXT CODES ******
     public static ArrayList<String> speech_translate(String file_path, String speech_code, String source_code, String target_code) throws Exception {
         // Speech gathering
         ArrayList<String> orig_text = speech(file_path, speech_code);
