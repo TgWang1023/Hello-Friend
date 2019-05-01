@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 
 
 public class API_access {
+    // Function returns a string that contains the translated text from the original text
     // text: Original text. source_code: Source language rep code. target_code: Target language rep code
     // For detailed availibility of text translation codes, visit https://cloud.google.com/translate/docs/languages
     public static String translate(String text, String source_code, String target_code) throws Exception {
@@ -40,6 +41,7 @@ public class API_access {
         return translation.getTranslatedText();
     }
 
+    // Function returns an arraylist of strings that contains the original text from the audio file.
     // file_path: File path to a PCM audio file to transcribe. speech_code: Speech language rep code.
     // For detailed availibility of speech codes, visit https://cloud.google.com/speech-to-text/docs/languages
     public static ArrayList<String> speech(String file_path, String speech_code) throws Exception {
@@ -73,6 +75,7 @@ public class API_access {
         }
     }
 
+    // Function returns an arraylist of strings that contains the translated text from the audio file.
     // file_path: file path to a PCM audio file to transcribe. speech_code: Speech language rep code. source_code: Source language rep code. target_code: Target language rep code.
     // For detailed availibility of text translation codes, visit https://cloud.google.com/translate/docs/languages
     // For detailed availibility of speech codes, visit https://cloud.google.com/speech-to-text/docs/languages
