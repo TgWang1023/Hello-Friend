@@ -86,7 +86,7 @@ public class API_access {
             RecognitionConfig config =
                 RecognitionConfig.newBuilder()
                     .setEncoding(AudioEncoding.LINEAR16)
-                    .setLanguageCode("en-US")
+                    .setLanguageCode(speech_code)
                     .setSampleRateHertz(16000)
                     .build();
             RecognitionAudio audio = RecognitionAudio.newBuilder().setContent(audioBytes).build();
