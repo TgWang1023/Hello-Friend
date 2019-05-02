@@ -1,6 +1,8 @@
 package edu.ucsb.cs48s19.operators;
 
+import edu.ucsb.cs48s19.templates.AdvancedMessage;
 import edu.ucsb.cs48s19.templates.JoinRequest;
+import edu.ucsb.cs48s19.templates.Pair;
 import edu.ucsb.cs48s19.templates.Room;
 import edu.ucsb.cs48s19.templates.User;
 
@@ -73,16 +75,42 @@ public class RoomManager {
         return String.format("%s/%s", pref, postf);
     }
 
+    /**
+     * 
+     * @param sessionId: String; sender's session ID
+     * @return sessionIdList: String[]; session ID of users in the room
+     * 
+     * The first session ID is sender's, then other receiver in the room.
+     *      
+     */
     private static String[] getListeners(String sessionId) {
         Room room = sessionIdToRoom.get(sessionId);
         if (room == null) {
             return new String[0];
         }
-        return room.getSessionIds();
+        String[] sessionIdList = room.getSessionIds();
+        // if the first is not sender:
+        if (sessionId.compareTo(sessionIdList[0]) != 0) {
+            sessionIdList[1] = sessionIdList[0];
+            sessionIdList[0] = sessionId;
+        }
+        return sessionIdList;
     }
 
     public static String[] getListeners(String pref, String postf) {
         return getListeners(getSessionId(pref, postf));
+    }
+
+    /**
+     * Prepare (sessionId, AdvancedMessage) array and return to the controller
+     * 
+     * @param <AdvancedMessage>
+     * @param sessionId
+     * @return
+     * 
+     */
+    private static Pair[] getMessageList(String sessionId) {
+        return new Pair[1];
     }
 
     public static void removeUser(String pref, String postf) {

@@ -1,6 +1,7 @@
 package edu.ucsb.cs48s19.hellofriend;
 
 import edu.ucsb.cs48s19.operators.RoomManager;
+import edu.ucsb.cs48s19.templates.AdvancedMessage;
 import edu.ucsb.cs48s19.templates.JoinRequest;
 import edu.ucsb.cs48s19.templates.Message;
 //import edu.ucsb.cs48s19.translate.Translator;
@@ -51,7 +52,7 @@ public class HelloFriendController {
         System.out.println("Disconnect user.");
     }
 
-    // Room message
+    // channel message
     @MessageMapping("/secured/user/send/{prefix}/{postfix}")
     public void channelMessage(
             @Payload Message message,
