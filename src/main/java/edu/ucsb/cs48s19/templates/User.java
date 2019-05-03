@@ -13,7 +13,7 @@ public class User {
         this.sessionId = sessionId;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 

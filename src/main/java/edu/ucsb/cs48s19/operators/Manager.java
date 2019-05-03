@@ -1,21 +1,19 @@
 package edu.ucsb.cs48s19.operators;
 
-import edu.ucsb.cs48s19.templates.AdvancedMessage;
-import edu.ucsb.cs48s19.templates.JoinRequest;
-import edu.ucsb.cs48s19.templates.Pair;
-import edu.ucsb.cs48s19.templates.Room;
-import edu.ucsb.cs48s19.templates.User;
+import edu.ucsb.cs48s19.templates.*;
 
 import java.util.HashMap;
 
-public class RoomManager {
+public class Manager {
 
     // map room name to rooms
     private static HashMap<String, Room> roomNameToRoom = new HashMap<>();
     // map user's session ID to rooms
     private static HashMap<String, Room> sessionIdToRoom = new HashMap<>();
+    // map user's session ID to users
+    private static HashMap<String, User> userNameToUser = new HashMap<>();
 
-    private RoomManager() { }
+    private Manager() { }
 
     public static boolean createRoom(
             JoinRequest joinRequest,
@@ -29,6 +27,7 @@ public class RoomManager {
         User owner = new User(joinRequest.getUserName(),
                 joinRequest.getUserLanguage(),
                 sessionId);
+        userNameToUser.put(sessionId, owner);
 //        System.out.println(owner);
         Room newRoom = new Room(joinRequest.getRoomName(), owner);
 //        System.out.println(newRoom);
@@ -55,6 +54,8 @@ public class RoomManager {
             System.out.println("No name doesn't accord any room!");
             return false;
         }
+
+        userNameToUser.put(sessionId, joiner);
 
         if (targetRoom.joinUser(joiner)) {
 //            System.out.println(targetRoom);
@@ -101,21 +102,43 @@ public class RoomManager {
         return getListeners(getSessionId(pref, postf));
     }
 
-    /**
-     * Prepare (sessionId, AdvancedMessage) array and return to the controller
-     * 
-     * @param <AdvancedMessage>
-     * @param sessionId
-     * @return
-     * 
-     */
-    private static Pair[] getMessageList(String sessionId) {
-        return new Pair[1];
+    private static Pair[] getMessageList(String sessionId, Message inMessage) {
+        String[] sessionIdList = getListeners(sessionId);
+        String senderName = userNameToUser.get(sessionId).getName();
+        Pair[] messageList = new Pair[sessionIdList.length];
+        // COMMENT: deal with sender's message to sender
+        messageList[0] = new Pair(
+                sessionIdList[0],
+                new AdvancedMessage(
+                        inMessage.getContent(),
+                        AdvancedMessage.NON_SYSTEM_FLAG,
+                        AdvancedMessage.NORMAL_STATE,
+                        senderName,
+                        AdvancedMessage.SENDER_FLAG
+                )
+        );
+        // COMMENT: deal with sender's message to receiver
+        messageList[1] = new Pair(
+                sessionIdList[1],
+                new AdvancedMessage(
+                        inMessage.getContent(),
+                        AdvancedMessage.NON_SYSTEM_FLAG,
+                        AdvancedMessage.NORMAL_STATE,
+                        senderName,
+                        AdvancedMessage.RECEIVER_FLAG
+                )
+        );
+        return messageList;
+    }
+
+    public static String findUserName(String sessionId) {
+        return userNameToUser.get(sessionId).getName();
     }
 
     public static void removeUser(String pref, String postf) {
         String sessionId = getSessionId(pref, postf);
-        RoomManager.removeUserFromRoom(sessionId);
+        userNameToUser.remove(sessionId);
+        removeUserFromRoom(sessionId);
     }
 
     private static void removeUserFromRoom(String sessionId) {

@@ -10,8 +10,21 @@ public class AdvancedMessage {
     private String sender;
     private boolean toReceiver;
 
-    public AdvancedMessage() {
-    }
+    public static final int NORMAL_STATE = 0;
+    public static final int ERROR_STATE = 1;
+    public static final int FAIL_STATE = 2;
+    public static final int PERMISSION_VIOLATION = 3;
+    public static final int NON_EXISTENCE = 4;
+
+    public static final boolean SYSTEM_FLAG = true;
+    public static final boolean NON_SYSTEM_FLAG = false;
+
+    public static final boolean SENDER_FLAG = true;
+    public static final boolean RECEIVER_FLAG = false;
+
+    public static final String SYSTEM_NAME = "SYSTEM";
+
+    public AdvancedMessage() { }
 
     public AdvancedMessage(
             String content, 

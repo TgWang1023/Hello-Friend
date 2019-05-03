@@ -32,7 +32,8 @@ function connect() {
         setConnected(true);
         stompClient.subscribe('/secured/user/queue/specific-room'
             + '-user' + sessionId, function (greeting) {
-                showMessage(JSON.parse(greeting.body).content);
+//                showMessage(JSON.parse(greeting.body).content);
+                processMessage(JSON.parse(greeting.body))
         });
     });
 }
@@ -80,6 +81,10 @@ function sendMessage() {
     stompClient.send("/app/secured/user/send" + url, {}, JSON.stringify(
         {'content': $("#room_msg").val()}
     ));
+}
+
+function processMessage(message) {
+    showMessage(message.content);
 }
 
 function showMessage(message) {
