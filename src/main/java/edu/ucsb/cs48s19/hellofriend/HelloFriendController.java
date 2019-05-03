@@ -1,6 +1,5 @@
 package edu.ucsb.cs48s19.hellofriend;
 
-import ch.qos.logback.core.pattern.color.MagentaCompositeConverter;
 import edu.ucsb.cs48s19.operators.Manager;
 import edu.ucsb.cs48s19.templates.AdvancedMessage;
 import edu.ucsb.cs48s19.templates.JoinRequest;

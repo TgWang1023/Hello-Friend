@@ -26,7 +26,7 @@ public class AdvancedMessage {
     }
 
     public String getContent() {
-        return this.content;
+        return content;
     }
 
     public void setContent(String content) {
@@ -34,11 +34,7 @@ public class AdvancedMessage {
     }
 
     public boolean isSystemFlag() {
-        return this.systemFlag;
-    }
-
-    public boolean getSystemFlag() {
-        return this.systemFlag;
+        return systemFlag;
     }
 
     public void setSystemFlag(boolean systemFlag) {
@@ -46,7 +42,7 @@ public class AdvancedMessage {
     }
 
     public int getInfoCode() {
-        return this.infoCode;
+        return infoCode;
     }
 
     public void setInfoCode(int infoCode) {
@@ -54,7 +50,7 @@ public class AdvancedMessage {
     }
 
     public String getSender() {
-        return this.sender;
+        return sender;
     }
 
     public void setSender(String sender) {
@@ -62,40 +58,11 @@ public class AdvancedMessage {
     }
 
     public boolean isToReceiver() {
-        return this.toReceiver;
-    }
-
-    public boolean getToReceiver() {
-        return this.toReceiver;
+        return toReceiver;
     }
 
     public void setToReceiver(boolean toReceiver) {
         this.toReceiver = toReceiver;
-    }
-
-    public AdvancedMessage content(String content) {
-        this.content = content;
-        return this;
-    }
-
-    public AdvancedMessage systemFlag(boolean systemFlag) {
-        this.systemFlag = systemFlag;
-        return this;
-    }
-
-    public AdvancedMessage infoCode(int infoCode) {
-        this.infoCode = infoCode;
-        return this;
-    }
-
-    public AdvancedMessage sender(String sender) {
-        this.sender = sender;
-        return this;
-    }
-
-    public AdvancedMessage toReceiver(boolean toReceiver) {
-        this.toReceiver = toReceiver;
-        return this;
     }
 
     @Override
