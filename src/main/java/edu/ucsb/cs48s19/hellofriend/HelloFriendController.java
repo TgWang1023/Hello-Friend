@@ -1,5 +1,6 @@
 package edu.ucsb.cs48s19.hellofriend;
 
+import edu.ucsb.cs48s19.operators.Console;
 import edu.ucsb.cs48s19.operators.Manager;
 import edu.ucsb.cs48s19.templates.AdvancedMessage;
 import edu.ucsb.cs48s19.templates.JoinRequest;
@@ -27,39 +28,36 @@ public class HelloFriendController {
             @NotNull JoinRequest joinRequest,
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
-        System.out.println(joinRequest);
+        Console.log(joinRequest.toString());
         String sessionId = Manager.getSessionId(prefix, postfix);
         if (joinRequest.getRequest() == 1) {
             int createFlag = Manager.createRoom(joinRequest, sessionId);
             if (createFlag != 10) {
-//                return new Message("This room name has been occupied.");
                 return new AdvancedMessage(
                         "This room name has been occupied.",
                         Manager.SYSTEM_FLAG,
                         createFlag,
                         Manager.SYSTEM_NAME,
-                        Manager.SENDER_FLAG
+                        Manager.TO_SENDER_FLAG
                 );
             }
-//            return new Message("Create Success.");
             return new AdvancedMessage(
                     "Create success.",
                     Manager.SYSTEM_FLAG,
                     createFlag,
                     Manager.SYSTEM_NAME,
-                    Manager.SENDER_FLAG
+                    Manager.TO_SENDER_FLAG
             );
         } else {
             int joinFlag = Manager.joinRoom(joinRequest, sessionId);
             if (joinFlag != Manager.JOIN_SUCCESS) {
-//                return new Message("Join Failed. No such room or the room is full.");
                 if (joinFlag == Manager.ROOM_NOT_EXISTS) {
                     return new AdvancedMessage(
                             "Join Failed. No such room with the name.",
                             Manager.SYSTEM_FLAG,
                             joinFlag,
                             Manager.SYSTEM_NAME,
-                            Manager.SENDER_FLAG
+                            Manager.TO_SENDER_FLAG
                     );
                 } else if (joinFlag == Manager.ROOM_IS_FULL) {
                     return new AdvancedMessage(
@@ -67,17 +65,16 @@ public class HelloFriendController {
                             Manager.SYSTEM_FLAG,
                             joinFlag,
                             Manager.SYSTEM_NAME,
-                            Manager.SENDER_FLAG
+                            Manager.TO_SENDER_FLAG
                     );
                 }
             }
-//            return new Message("Join Success.");
             return new AdvancedMessage(
                     "Join success.",
                     Manager.SYSTEM_FLAG,
                     joinFlag,
                     Manager.SYSTEM_NAME,
-                    Manager.SENDER_FLAG
+                    Manager.TO_SENDER_FLAG
             );
         }
     }
@@ -88,7 +85,7 @@ public class HelloFriendController {
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
         Manager.removeUser(prefix, postfix);
-        System.out.println("Disconnect user.");
+        Console.log("Disconnect user.");
     }
 
     // channel message
@@ -97,16 +94,14 @@ public class HelloFriendController {
             @Payload Message message,
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
-        System.out.println(message);
-
-        // TODO: translate message
+        Console.log(message);
 
         Pair[] messageList = Manager.getMessageList(prefix, postfix, message);
         for (Pair pair: messageList) {
             String dest = String.format(
                     "/secured/user/queue/specific-room-user/%s",
                     pair.getSessionId());
-            System.out.println("Send message to " + dest);
+            Console.log("Send message to " + dest);
             ops.convertAndSend(dest, pair.getMessage());
         }
     }

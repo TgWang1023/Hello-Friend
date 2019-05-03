@@ -20,8 +20,8 @@ public class Manager {
     public static final boolean SYSTEM_FLAG = true;
     public static final boolean NON_SYSTEM_FLAG = false;
 
-    public static final boolean SENDER_FLAG = true;
-    public static final boolean RECEIVER_FLAG = false;
+    public static final boolean TO_SENDER_FLAG = false;
+    public static final boolean TO_RECEIVER_FLAG = true;
 
     public static final String SYSTEM_NAME = "SYSTEM";
 
@@ -40,7 +40,7 @@ public class Manager {
             String sessionId) {
 
         if (roomNameToRoom.get(joinRequest.getRoomName()) != null) {
-            System.out.println("The room name is occupied!");
+            Console.log("The room name is occupied!");
             return ROOM_NAME_OCCUPIED;
         }
 
@@ -48,14 +48,10 @@ public class Manager {
                 joinRequest.getUserLanguage(),
                 sessionId);
         userNameToUser.put(sessionId, owner);
-//        System.out.println(owner);
         Room newRoom = new Room(joinRequest.getRoomName(), owner);
-//        System.out.println(newRoom);
 
         roomNameToRoom.put(joinRequest.getRoomName(), newRoom);
         sessionIdToRoom.put(sessionId, newRoom);
-
-//        System.out.println(sessionIdToRoom);
 
         return CREATE_SUCCESS;
     }
@@ -67,20 +63,17 @@ public class Manager {
         User joiner = new User(joinRequest.getUserName(),
                 joinRequest.getUserLanguage(),
                 sessionId);
-//        System.out.println(joiner);
         Room targetRoom = roomNameToRoom.get(joinRequest.getRoomName());
 
         if (targetRoom == null) {
-            System.out.println("No name doesn't accord any room!");
+            Console.log("No room has such name!");
             return ROOM_NOT_EXISTS;
         }
 
         userNameToUser.put(sessionId, joiner);
 
         if (targetRoom.joinUser(joiner)) {
-//            System.out.println(targetRoom);
             sessionIdToRoom.put(sessionId, targetRoom);
-//            System.out.println(sessionIdToRoom);
             return JOIN_SUCCESS;
         }
 
@@ -130,7 +123,7 @@ public class Manager {
                         Manager.NON_SYSTEM_FLAG,
                         Manager.NORMAL_STATE,
                         senderName,
-                        Manager.SENDER_FLAG
+                        Manager.TO_SENDER_FLAG
                 )
         );
         // COMMENT: deal with sender's message to receiver
@@ -142,7 +135,7 @@ public class Manager {
                             Manager.NON_SYSTEM_FLAG,
                             Manager.NORMAL_STATE,
                             senderName,
-                            Manager.RECEIVER_FLAG
+                            Manager.TO_RECEIVER_FLAG
                     )
             );
         }
@@ -170,7 +163,7 @@ public class Manager {
         boolean flag = room.removeUser(sessionId);
         sessionIdToRoom.remove(sessionId);
         if (flag) {
-            System.out.println("Remove room.");
+            Console.log("Remove room.");
             removeRoom(room);
         }
     }

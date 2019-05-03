@@ -98,10 +98,7 @@ function processMessage(message) {
     $("#conversation").show();
 
     showMessage(message.content);
-    showMessage(message.systemFlag);
-    showMessage(message.infoCode);
-    showMessage(message.sender);
-    showMessage(message.toReceiver);
+    console.log(message);
 }
 
 function showMessage(message) {
