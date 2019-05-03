@@ -6,6 +6,26 @@ import java.util.HashMap;
 
 public class Manager {
 
+    // CONSTANTS
+    public static final int NORMAL_STATE = 0;
+    public static final int ERROR_STATE = 1;
+
+    public static final int CREATE_SUCCESS = 10;
+    public static final int ROOM_NAME_OCCUPIED = 11;
+
+    public static final int JOIN_SUCCESS = 20;
+    public static final int ROOM_NOT_EXISTS = 21;
+    public static final int ROOM_IS_FULL = 22;
+
+    public static final boolean SYSTEM_FLAG = true;
+    public static final boolean NON_SYSTEM_FLAG = false;
+
+    public static final boolean SENDER_FLAG = true;
+    public static final boolean RECEIVER_FLAG = false;
+
+    public static final String SYSTEM_NAME = "SYSTEM";
+
+
     // map room name to rooms
     private static HashMap<String, Room> roomNameToRoom = new HashMap<>();
     // map user's session ID to rooms
@@ -15,13 +35,13 @@ public class Manager {
 
     private Manager() { }
 
-    public static boolean createRoom(
+    public static int createRoom(
             JoinRequest joinRequest,
             String sessionId) {
 
         if (roomNameToRoom.get(joinRequest.getRoomName()) != null) {
             System.out.println("The room name is occupied!");
-            return false;
+            return ROOM_NAME_OCCUPIED;
         }
 
         User owner = new User(joinRequest.getUserName(),
@@ -37,10 +57,10 @@ public class Manager {
 
 //        System.out.println(sessionIdToRoom);
 
-        return true;
+        return CREATE_SUCCESS;
     }
 
-    public static boolean joinRoom(
+    public static int joinRoom(
             JoinRequest joinRequest,
             String sessionId) {
 
@@ -52,7 +72,7 @@ public class Manager {
 
         if (targetRoom == null) {
             System.out.println("No name doesn't accord any room!");
-            return false;
+            return ROOM_NOT_EXISTS;
         }
 
         userNameToUser.put(sessionId, joiner);
@@ -61,10 +81,10 @@ public class Manager {
 //            System.out.println(targetRoom);
             sessionIdToRoom.put(sessionId, targetRoom);
 //            System.out.println(sessionIdToRoom);
-            return true;
+            return JOIN_SUCCESS;
         }
 
-        return false;
+        return ROOM_IS_FULL;
     }
 
     private static void removeRoom(Room room) {
@@ -98,10 +118,6 @@ public class Manager {
         return sessionIdList;
     }
 
-    public static String[] getListeners(String pref, String postf) {
-        return getListeners(getSessionId(pref, postf));
-    }
-
     private static Pair[] getMessageList(String sessionId, Message inMessage) {
         String[] sessionIdList = getListeners(sessionId);
         String senderName = userNameToUser.get(sessionId).getName();
@@ -111,24 +127,31 @@ public class Manager {
                 sessionIdList[0],
                 new AdvancedMessage(
                         inMessage.getContent(),
-                        AdvancedMessage.NON_SYSTEM_FLAG,
-                        AdvancedMessage.NORMAL_STATE,
+                        Manager.NON_SYSTEM_FLAG,
+                        Manager.NORMAL_STATE,
                         senderName,
-                        AdvancedMessage.SENDER_FLAG
+                        Manager.SENDER_FLAG
                 )
         );
         // COMMENT: deal with sender's message to receiver
-        messageList[1] = new Pair(
-                sessionIdList[1],
-                new AdvancedMessage(
-                        inMessage.getContent(),
-                        AdvancedMessage.NON_SYSTEM_FLAG,
-                        AdvancedMessage.NORMAL_STATE,
-                        senderName,
-                        AdvancedMessage.RECEIVER_FLAG
-                )
-        );
+        if (messageList.length > 1) {
+            messageList[1] = new Pair(
+                    sessionIdList[1],
+                    new AdvancedMessage(
+                            inMessage.getContent(),
+                            Manager.NON_SYSTEM_FLAG,
+                            Manager.NORMAL_STATE,
+                            senderName,
+                            Manager.RECEIVER_FLAG
+                    )
+            );
+        }
+
         return messageList;
+    }
+
+    public static Pair[] getMessageList(String pref, String postf, Message inMessage) {
+        return getMessageList(getSessionId(pref, postf), inMessage);
     }
 
     public static String findUserName(String sessionId) {

@@ -1,10 +1,12 @@
 package edu.ucsb.cs48s19.hellofriend;
 
+import ch.qos.logback.core.pattern.color.MagentaCompositeConverter;
 import edu.ucsb.cs48s19.operators.Manager;
 import edu.ucsb.cs48s19.templates.AdvancedMessage;
 import edu.ucsb.cs48s19.templates.JoinRequest;
 import edu.ucsb.cs48s19.templates.Message;
 //import edu.ucsb.cs48s19.translate.Translator;
+import edu.ucsb.cs48s19.templates.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.messaging.handler.annotation.*;
@@ -29,44 +31,54 @@ public class HelloFriendController {
         System.out.println(joinRequest);
         String sessionId = Manager.getSessionId(prefix, postfix);
         if (joinRequest.getRequest() == 1) {
-            boolean flag = Manager.createRoom(joinRequest, sessionId);
-            if (!flag) {
+            int createFlag = Manager.createRoom(joinRequest, sessionId);
+            if (createFlag != 10) {
 //                return new Message("This room name has been occupied.");
                 return new AdvancedMessage(
                         "This room name has been occupied.",
-                        AdvancedMessage.SYSTEM_FLAG,
-                        AdvancedMessage.PERMISSION_VIOLATION,
-                        AdvancedMessage.SYSTEM_NAME,
-                        AdvancedMessage.SENDER_FLAG
+                        Manager.SYSTEM_FLAG,
+                        createFlag,
+                        Manager.SYSTEM_NAME,
+                        Manager.SENDER_FLAG
                 );
             }
 //            return new Message("Create Success.");
             return new AdvancedMessage(
                     "Create success.",
-                    AdvancedMessage.SYSTEM_FLAG,
-                    AdvancedMessage.NORMAL_STATE,
-                    AdvancedMessage.SYSTEM_NAME,
-                    AdvancedMessage.SENDER_FLAG
+                    Manager.SYSTEM_FLAG,
+                    createFlag,
+                    Manager.SYSTEM_NAME,
+                    Manager.SENDER_FLAG
             );
         } else {
-            boolean flag = Manager.joinRoom(joinRequest, sessionId);
-            if (!flag) {
+            int joinFlag = Manager.joinRoom(joinRequest, sessionId);
+            if (joinFlag != Manager.JOIN_SUCCESS) {
 //                return new Message("Join Failed. No such room or the room is full.");
-                return new AdvancedMessage(
-                        "Join Failed. No such room or the room is full.",
-                        AdvancedMessage.SYSTEM_FLAG,
-                        AdvancedMessage.ERROR_STATE,
-                        AdvancedMessage.SYSTEM_NAME,
-                        AdvancedMessage.SENDER_FLAG
-                );
+                if (joinFlag == Manager.ROOM_NOT_EXISTS) {
+                    return new AdvancedMessage(
+                            "Join Failed. No such room with the name.",
+                            Manager.SYSTEM_FLAG,
+                            joinFlag,
+                            Manager.SYSTEM_NAME,
+                            Manager.SENDER_FLAG
+                    );
+                } else if (joinFlag == Manager.ROOM_IS_FULL) {
+                    return new AdvancedMessage(
+                            "Join Failed. The room is full.",
+                            Manager.SYSTEM_FLAG,
+                            joinFlag,
+                            Manager.SYSTEM_NAME,
+                            Manager.SENDER_FLAG
+                    );
+                }
             }
 //            return new Message("Join Success.");
             return new AdvancedMessage(
                     "Join success.",
-                    AdvancedMessage.SYSTEM_FLAG,
-                    AdvancedMessage.NORMAL_STATE,
-                    AdvancedMessage.SYSTEM_NAME,
-                    AdvancedMessage.SENDER_FLAG
+                    Manager.SYSTEM_FLAG,
+                    joinFlag,
+                    Manager.SYSTEM_NAME,
+                    Manager.SENDER_FLAG
             );
         }
     }
@@ -90,13 +102,13 @@ public class HelloFriendController {
 
         // TODO: translate message
 
-        String[] listenerList = Manager.getListeners(prefix, postfix);
-        for (String listener: listenerList) {
+        Pair[] messageList = Manager.getMessageList(prefix, postfix, message);
+        for (Pair pair: messageList) {
             String dest = String.format(
                     "/secured/user/queue/specific-room-user/%s",
-                    listener);
+                    pair.getSessionId());
             System.out.println("Send message to " + dest);
-            ops.convertAndSend(dest, message);
+            ops.convertAndSend(dest, pair.getMessage());
         }
     }
 

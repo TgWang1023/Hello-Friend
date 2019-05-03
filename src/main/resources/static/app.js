@@ -54,12 +54,13 @@ function createRoom() {
         'userLanguage': $("#user_lang").val(),
         'request': 1}
     ));
+    /*
     $("logo").hide();
     $("#room_form").hide();
     $("#message_form").show();
     $("#section_title").show();
     $("#conversation").show();
-
+    */
 }
 
 function joinRoom() {
@@ -69,12 +70,13 @@ function joinRoom() {
         'userLanguage': $("#join_user_lang").val(),
         'request': 2}
     ));
+    /*
     $("logo").hide();
     $("#room_form").hide();
-
     $("#message_form").show();
     $("#section_title").show();
     $("#conversation").show();
+    */
 }
 
 function sendMessage() {
@@ -84,7 +86,22 @@ function sendMessage() {
 }
 
 function processMessage(message) {
+    if (message.systemFlag) {
+        if (message.infoCode == 10 || message.infoCode == 20) {
+            $("logo").hide();
+            $("#room_form").hide();
+            $("#message_form").show();
+            $("#section_title").show();
+            $("#conversation").show();
+        }
+    }
+    $("#conversation").show();
+
     showMessage(message.content);
+    showMessage(message.systemFlag);
+    showMessage(message.infoCode);
+    showMessage(message.sender);
+    showMessage(message.toReceiver);
 }
 
 function showMessage(message) {
