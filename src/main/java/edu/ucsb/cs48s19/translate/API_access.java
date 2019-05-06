@@ -1,4 +1,4 @@
-package translate;
+package edu.ucsb.cs48s19.translate;
 // Cloud Translation
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.Translate.TranslateOption;

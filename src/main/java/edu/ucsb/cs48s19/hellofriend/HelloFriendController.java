@@ -7,6 +7,8 @@ import edu.ucsb.cs48s19.templates.JoinRequest;
 import edu.ucsb.cs48s19.templates.Message;
 //import edu.ucsb.cs48s19.translate.Translator;
 import edu.ucsb.cs48s19.templates.Pair;
+import edu.ucsb.cs48s19.translate.API_access;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.messaging.handler.annotation.*;
@@ -42,7 +44,7 @@ public class HelloFriendController {
                 );
             }
             return new AdvancedMessage(
-                    "Create success.",
+                    API_access.translate("Create success.", "en", "zh-CN"),
                     Manager.SYSTEM_FLAG,
                     createFlag,
                     Manager.SYSTEM_NAME,
