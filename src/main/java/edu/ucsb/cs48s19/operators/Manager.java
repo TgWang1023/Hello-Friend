@@ -13,6 +13,7 @@ public class Manager {
 
     public static final int CREATE_SUCCESS = 10;
     public static final int ROOM_NAME_OCCUPIED = 11;
+    public static final int QUIT_SUCCESS = 12;
 
     public static final int JOIN_SUCCESS = 20;
     public static final int ROOM_NOT_EXISTS = 21;
@@ -79,11 +80,6 @@ public class Manager {
         }
 
         return ROOM_IS_FULL;
-    }
-
-    private static void removeRoom(Room room) {
-        String roomName = room.getName();
-        roomNameToRoom.remove(roomName);
     }
 
     public static String getSessionId(String pref, String postf) {
@@ -173,21 +169,28 @@ public class Manager {
         return userNameToUser.get(sessionId).getName();
     }
 
-    public static void removeUser(String pref, String postf) {
+    public static User removeUser(String pref, String postf) {
         String sessionId = getSessionId(pref, postf);
         userNameToUser.remove(sessionId);
-        removeUserFromRoom(sessionId);
+        return removeUserFromRoom(sessionId);
     }
 
-    private static void removeUserFromRoom(String sessionId) {
+    private static User removeUserFromRoom(String sessionId) {
         Room room = sessionIdToRoom.get(sessionId);
-        if (room == null) { return; }
+        if (room == null) { return null; }
         boolean flag = room.removeUser(sessionId);
         sessionIdToRoom.remove(sessionId);
         if (flag) {
             Console.log("Remove room.");
             removeRoom(room);
+            return null;
         }
+        return room.getOwner();
+    }
+
+    private static void removeRoom(Room room) {
+        String roomName = room.getName();
+        roomNameToRoom.remove(roomName);
     }
 
 

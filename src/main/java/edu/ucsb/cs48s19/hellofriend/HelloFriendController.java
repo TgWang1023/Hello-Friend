@@ -2,11 +2,8 @@ package edu.ucsb.cs48s19.hellofriend;
 
 import edu.ucsb.cs48s19.operators.Console;
 import edu.ucsb.cs48s19.operators.Manager;
-import edu.ucsb.cs48s19.templates.AdvancedMessage;
-import edu.ucsb.cs48s19.templates.JoinRequest;
-import edu.ucsb.cs48s19.templates.Message;
+import edu.ucsb.cs48s19.templates.*;
 //import edu.ucsb.cs48s19.translate.Translator;
-import edu.ucsb.cs48s19.templates.Pair;
 import edu.ucsb.cs48s19.translate.API_access;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +47,7 @@ public class HelloFriendController {
                     API_access.translate(
                             "Create success.",
                             "en",
-                            "zh-CN"), // TODO: user's language
+                            "zh-TW"), // TODO: user's language
                     Manager.SYSTEM_FLAG,
                     createFlag,
                     Manager.SYSTEM_NAME,
@@ -92,8 +89,29 @@ public class HelloFriendController {
     public void disconnectUser(
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
-        Manager.removeUser(prefix, postfix);
+        User owner = Manager.removeUser(prefix, postfix);
         Console.log("Disconnect user.");
+        Console.log(owner);
+        if (owner != null) {
+            String dest = String.format(
+                    "/secured/user/queue/specific-room-user/%s",
+                    owner.getSessionId());
+            String quitMessage = "Another user has disconnected.";
+            if (owner.getLanguage().compareTo("en") != 0) {
+                quitMessage = API_access.translate(
+                        quitMessage,
+                        "en",
+                        owner.getLanguage());
+            }
+            ops.convertAndSend(dest, new AdvancedMessage(
+                    quitMessage,
+                    Manager.SYSTEM_FLAG,
+                    Manager.QUIT_SUCCESS,
+                    Manager.SYSTEM_NAME,
+                    Manager.TO_RECEIVER_FLAG
+            ));
+
+        }
     }
 
     // channel message

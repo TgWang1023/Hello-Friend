@@ -8,6 +8,7 @@ public class Console {
     }
 
     public static void log(Object o) {
+        if (o != null)
         System.out.println(o.toString());
     }
 }
