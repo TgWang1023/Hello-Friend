@@ -55,15 +55,15 @@ public class Room {
         return (this.owner == null);
     }
 
-    public String[] getSessionIds() {
-        String[] ids;
+    public User[] getListeners() {
+        User[] ids;
         if (this.joiner == null) {
-            ids = new String[1];
-            ids[0] = this.owner.getSessionId();
+            ids = new User[1];
+            ids[0] = this.owner;
         } else {
-            ids = new String[2];
-            ids[0] = this.owner.getSessionId();
-            ids[1] = this.joiner.getSessionId();
+            ids = new User[2];
+            ids[0] = this.owner;
+            ids[1] = this.joiner;
         }
         return ids;
     }

@@ -29,7 +29,7 @@ public class User {
         this.language = language;
     }
 
-    String getSessionId() {
+    public String getSessionId() {
         return sessionId;
     }
 

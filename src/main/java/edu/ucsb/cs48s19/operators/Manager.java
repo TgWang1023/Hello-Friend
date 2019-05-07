@@ -1,6 +1,7 @@
 package edu.ucsb.cs48s19.operators;
 
 import edu.ucsb.cs48s19.templates.*;
+import edu.ucsb.cs48s19.translate.API_access;
 
 import java.util.HashMap;
 
@@ -97,27 +98,29 @@ public class Manager {
      * The first session ID is sender's, then other receiver in the room.
      *      
      */
-    private static String[] getListeners(String sessionId) {
+    private static User[] getListeners(String sessionId) {
         Room room = sessionIdToRoom.get(sessionId);
         if (room == null) {
-            return new String[0];
+            return new User[0];
         }
-        String[] sessionIdList = room.getSessionIds();
+        User[] userList = room.getListeners();
         // if the first is not sender:
-        if (sessionId.compareTo(sessionIdList[0]) != 0) {
-            sessionIdList[1] = sessionIdList[0];
-            sessionIdList[0] = sessionId;
+        if (sessionId.compareTo(userList[0].getSessionId()) != 0) {
+            User temp = userList[1];
+            userList[1] = userList[0];
+            userList[0] = temp;
         }
-        return sessionIdList;
+        return userList;
     }
 
     private static Pair[] getMessageList(String sessionId, Message inMessage) {
-        String[] sessionIdList = getListeners(sessionId);
-        String senderName = userNameToUser.get(sessionId).getName();
-        Pair[] messageList = new Pair[sessionIdList.length];
+        User[] userList = getListeners(sessionId);
+        User sender = userList[0];
+        String senderName = sender.getName();
+        Pair[] messageList = new Pair[userList.length];
         // COMMENT: deal with sender's message to sender
         messageList[0] = new Pair(
-                sessionIdList[0],
+                userList[0],
                 new AdvancedMessage(
                         inMessage.getContent(),
                         Manager.NON_SYSTEM_FLAG,
@@ -126,18 +129,37 @@ public class Manager {
                         Manager.TO_SENDER_FLAG
                 )
         );
+        Console.log(messageList[0].toString());
         // COMMENT: deal with sender's message to receiver
         if (messageList.length > 1) {
+            String outMessage = inMessage.getContent();
+            // COMMENT: if not the same language, translate
+            if (userList[0].getLanguage()
+                    .compareTo(userList[1].getLanguage())
+                    != 0
+                ) {
+                try {
+                    outMessage = API_access.translate(
+                            outMessage,
+                            sender.getLanguage(),
+                            userList[1].getLanguage());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             messageList[1] = new Pair(
-                    sessionIdList[1],
+                    userList[1],
                     new AdvancedMessage(
-                            inMessage.getContent(),
+                            outMessage,
                             Manager.NON_SYSTEM_FLAG,
                             Manager.NORMAL_STATE,
                             senderName,
                             Manager.TO_RECEIVER_FLAG
                     )
             );
+            Console.log(messageList[1].toString());
+
         }
 
         return messageList;

@@ -3,24 +3,23 @@ package edu.ucsb.cs48s19.templates;
 import java.util.Objects;
 
 public class Pair {
-    private String sessionId;
+    private User receiver;
     private AdvancedMessage message;
 
 
-    public Pair() {
-    }
+    public Pair() { }
 
-    public Pair(String sessionId, AdvancedMessage message) {
-        this.sessionId = sessionId;
+    public Pair(User receiver, AdvancedMessage message) {
+        this.receiver = receiver;
         this.message = message;
     }
 
-    public String getSessionId() {
-        return this.sessionId;
+    public User getReceiver() {
+        return this.receiver;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
     }
 
     public AdvancedMessage getMessage() {
@@ -31,8 +30,8 @@ public class Pair {
         this.message = message;
     }
 
-    public Pair sessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public Pair sessionId(User receiver) {
+        this.receiver = receiver;
         return this;
     }
 
@@ -49,24 +48,24 @@ public class Pair {
             return false;
         }
         Pair pair = (Pair) o;
-        return Objects.equals(sessionId, pair.sessionId) && Objects.equals(message, pair.message);
+        return Objects.equals(receiver, pair.receiver) && Objects.equals(message, pair.message);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sessionId, message);
+        return Objects.hash(receiver, message);
     }
 
     @Override
     public String toString() {
         return "{" +
-            " sessionId='" + getSessionId() + "'" +
+            " receiver='" + getReceiver() + "'" +
             ", message='" + getMessage() + "'" +
             "}";
     }
 
     public static void main(String[] args) {
-        Pair p = new Pair("123", new AdvancedMessage());
+        Pair p = new Pair(new User(), new AdvancedMessage());
         System.out.println(p);
     }
 

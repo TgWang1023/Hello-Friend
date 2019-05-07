@@ -36,7 +36,10 @@ public class HelloFriendController {
             int createFlag = Manager.createRoom(joinRequest, sessionId);
             if (createFlag != 10) {
                 return new AdvancedMessage(
-                        "This room name has been occupied.",
+                        API_access.translate(
+                                "This room name has been occupied.",
+                                "en",
+                                "zh-CN"), // TODO: user's language
                         Manager.SYSTEM_FLAG,
                         createFlag,
                         Manager.SYSTEM_NAME,
@@ -44,7 +47,10 @@ public class HelloFriendController {
                 );
             }
             return new AdvancedMessage(
-                    API_access.translate("Create success.", "en", "zh-CN"),
+                    API_access.translate(
+                            "Create success.",
+                            "en",
+                            "zh-CN"), // TODO: user's language
                     Manager.SYSTEM_FLAG,
                     createFlag,
                     Manager.SYSTEM_NAME,
@@ -102,7 +108,7 @@ public class HelloFriendController {
         for (Pair pair: messageList) {
             String dest = String.format(
                     "/secured/user/queue/specific-room-user/%s",
-                    pair.getSessionId());
+                    pair.getReceiver().getSessionId());
             Console.log("Send message to " + dest);
             ops.convertAndSend(dest, pair.getMessage());
         }
