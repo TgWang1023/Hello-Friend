@@ -53,6 +53,11 @@
             <artifactId>google-cloud-translate</artifactId>
             <version>1.49.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-speech</artifactId>
+            <version>0.61.0-beta</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -75,7 +80,7 @@
                     <archive>
                         <index>true</index>
                         <manifest>
-                            <mainClass>translate.Translator</mainClass>
+                            <mainClass>translate.SpeechTranslateAPI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

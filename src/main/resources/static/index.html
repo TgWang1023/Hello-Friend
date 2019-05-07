@@ -6,7 +6,6 @@
     <title>Hello-Friend-Home</title>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!--  <link href="/static/css/main.css" rel="stylesheet">-->
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -19,14 +18,18 @@
 <div class="container">
     <div class="product">
 
+        <div id="logo">
+          Hello-Friend
+        </div>
+
         <!-- connect and disconnect -->
         <div class="row">
             <div class="col-md-6">
                 <form class="form-inline">
                     <div class="form-group">
-                        <label for="connect">Connect to the server:</label>
-                        <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                        <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+                        <!-- <label for="connect">Connect to the server:</label> -->
+                        <button id="connect" class="s-btn" type="submit">Connect</button>
+                        <button id="disconnect" class="s-btn" type="submit" disabled="disabled">Disconnect
                         </button>
                     </div>
                 </form>
@@ -34,15 +37,15 @@
         </div>
         <!-- connect and disconnect ends -->
 
-        <!-- create/join room section -->
+        <!-- create/join room form section -->
         <div id="room_form">
             <ul class="tab">
                 <li class="tab-item active">Create</li>
                 <li class="tab-item">Join</li>
             </ul>
 
-            <!-- create section -->
-            <div id="card">
+            <div id="create_join" class="card">
+              <!-- create section -->
                 <div class="mod-box selected">
                     <div id="create_room_section" class="mod-box-content">
                         <form action="" method="post">
@@ -123,31 +126,29 @@
         </div>
         <!-- create/join room section ends -->
 
-        <!-- chat section -->
-        <div class="row">
-            <form id="message_form" class="form-inline">
+<!--$$$$$$$$$$$$$$$$- -->
+<!--$$$$$$$$$$$$$$$$- -->
+<!-- chat section starts-->
+        <div id="chat_section">
+            <div id="section_title">
+                Chat Section
+            </div>
+            <form id="message_form" >
                 <div class="form-group">
-                    <label for="room_msg">Chat Section:</label>
-                    <input type="text" id="room_msg" class="form-control" placeholder="Hello!">
+                    <input type="text" id="room_msg" class="msg300px" placeholder="Hello!">
                 </div>
-                <button id="send_msg" class="btn btn-default" type="submit">Send Message</button>
+                <button id="send_msg" class="msgbtn" type="submit">Send Message</button>
             </form>
+
+                <div id="conversation">
+                    <div class="msg_container">Message</div>
+                </div>
+
         </div>
         <!-- chat section ends -->
+<!--$$$$$$$$$$$$$$$$- -->
+<!--$$$$$$$$$$$$$$$$- -->
 
-        <div class="row">
-            <div class="col-md-12">
-                <table id="conversation" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Messages</th>
-                    </tr>
-                    </thead>
-                    <tbody id="greetings">
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
 </div>
 </body>
@@ -155,10 +156,10 @@
 <script type="text/javascript">
 $(function(){
 //控制tab切换
-$("#card .mod-box").eq(0).show().siblings().hide();
+$("#create_join .mod-box").eq(0).show().siblings().hide();
 $(".tab-item").click(function () {
   $(this).addClass("active").siblings().removeClass("active");
-  $("#card .mod-box").eq($(this).index()).show().siblings().hide();
+  $("#create_join .mod-box").eq($(this).index()).show().siblings().hide();
 })});
 
 </script>

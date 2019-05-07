@@ -1,9 +1,11 @@
 package edu.ucsb.cs48s19.hellofriend;
 
-import edu.ucsb.cs48s19.operators.RoomManager;
-import edu.ucsb.cs48s19.templates.JoinRequest;
-import edu.ucsb.cs48s19.templates.Message;
+import edu.ucsb.cs48s19.operators.Console;
+import edu.ucsb.cs48s19.operators.Manager;
+import edu.ucsb.cs48s19.templates.*;
 //import edu.ucsb.cs48s19.translate.Translator;
+import edu.ucsb.cs48s19.translate.API_access;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.messaging.handler.annotation.*;
@@ -21,24 +23,64 @@ public class HelloFriendController {
     // connect user
     @MessageMapping("/secured/user/connect/{prefix}/{postfix}")
     @SendTo("/secured/user/queue/specific-room-user/{prefix}/{postfix}")
-    public Message connectUser(
+    public AdvancedMessage connectUser(
             @NotNull JoinRequest joinRequest,
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
-        System.out.println(joinRequest);
-        String sessionId = RoomManager.getSessionId(prefix, postfix);
+        Console.log(joinRequest.toString());
+        String sessionId = Manager.getSessionId(prefix, postfix);
         if (joinRequest.getRequest() == 1) {
-            boolean flag = RoomManager.createRoom(joinRequest, sessionId);
-            if (!flag) {
-                return new Message("This room name has been occupied.");
+            int createFlag = Manager.createRoom(joinRequest, sessionId);
+            if (createFlag != 10) {
+                return new AdvancedMessage(
+                        API_access.translate(
+                                "This room name has been occupied.",
+                                "en",
+                                "zh-CN"), // TODO: user's language
+                        Manager.SYSTEM_FLAG,
+                        createFlag,
+                        Manager.SYSTEM_NAME,
+                        Manager.TO_SENDER_FLAG
+                );
             }
-            return new Message("Create Success.");
+            return new AdvancedMessage(
+                    API_access.translate(
+                            "Create success.",
+                            "en",
+                            "zh-TW"), // TODO: user's language
+                    Manager.SYSTEM_FLAG,
+                    createFlag,
+                    Manager.SYSTEM_NAME,
+                    Manager.TO_SENDER_FLAG
+            );
         } else {
-            boolean flag = RoomManager.joinRoom(joinRequest, sessionId);
-            if (!flag) {
-                return new Message("Join Failed. No such room or the room is full.");
+            int joinFlag = Manager.joinRoom(joinRequest, sessionId);
+            if (joinFlag != Manager.JOIN_SUCCESS) {
+                if (joinFlag == Manager.ROOM_NOT_EXISTS) {
+                    return new AdvancedMessage(
+                            "Join Failed. No such room with the name.",
+                            Manager.SYSTEM_FLAG,
+                            joinFlag,
+                            Manager.SYSTEM_NAME,
+                            Manager.TO_SENDER_FLAG
+                    );
+                } else if (joinFlag == Manager.ROOM_IS_FULL) {
+                    return new AdvancedMessage(
+                            "Join Failed. The room is full.",
+                            Manager.SYSTEM_FLAG,
+                            joinFlag,
+                            Manager.SYSTEM_NAME,
+                            Manager.TO_SENDER_FLAG
+                    );
+                }
             }
-            return new Message("Join Success.");
+            return new AdvancedMessage(
+                    "Join success.",
+                    Manager.SYSTEM_FLAG,
+                    joinFlag,
+                    Manager.SYSTEM_NAME,
+                    Manager.TO_SENDER_FLAG
+            );
         }
     }
 
@@ -47,27 +89,46 @@ public class HelloFriendController {
     public void disconnectUser(
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
-        RoomManager.removeUser(prefix, postfix);
-        System.out.println("Disconnect user.");
+        User owner = Manager.removeUser(prefix, postfix);
+        Console.log("Disconnect user.");
+        Console.log(owner);
+        if (owner != null) {
+            String dest = String.format(
+                    "/secured/user/queue/specific-room-user/%s",
+                    owner.getSessionId());
+            String quitMessage = "Another user has disconnected.";
+            if (owner.getLanguage().compareTo("en") != 0) {
+                quitMessage = API_access.translate(
+                        quitMessage,
+                        "en",
+                        owner.getLanguage());
+            }
+            ops.convertAndSend(dest, new AdvancedMessage(
+                    quitMessage,
+                    Manager.SYSTEM_FLAG,
+                    Manager.QUIT_SUCCESS,
+                    Manager.SYSTEM_NAME,
+                    Manager.TO_RECEIVER_FLAG
+            ));
+
+        }
     }
 
-    // Room message
+    // channel message
     @MessageMapping("/secured/user/send/{prefix}/{postfix}")
     public void channelMessage(
             @Payload Message message,
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
-        System.out.println(message);
+        Console.log(message);
 
-        // TODO: translate message
-
-        String[] listenerList = RoomManager.getListeners(prefix, postfix);
-        for (String listener: listenerList) {
+        Pair[] messageList = Manager.getMessageList(prefix, postfix, message);
+        for (Pair pair: messageList) {
             String dest = String.format(
                     "/secured/user/queue/specific-room-user/%s",
-                    listener);
-            System.out.println("Send message to " + dest);
-            ops.convertAndSend(dest, message);
+                    pair.getReceiver().getSessionId());
+            Console.log("Send message to " + dest);
+            ops.convertAndSend(dest, pair.getMessage());
         }
     }
 
