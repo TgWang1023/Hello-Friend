@@ -1,5 +1,7 @@
 package edu.ucsb.cs48s19.templates;
 
+import edu.ucsb.cs48s19.operators.Console;
+
 public class Room {
     private String name;
     private User owner;
@@ -33,18 +35,16 @@ public class Room {
     }
 
     public boolean joinUser(User joiner) {
-        System.out.print("Join: ");
         if (this.canJoin()) {
-            System.out.println("Success.");
             this.joiner = joiner;
+            Console.log("Join success.");
             return true;
         }
-        System.out.println("Failed.");
+        Console.log("Join failed.");
         return false;
     }
 
     public boolean removeUser(String sessionId) {
-        // TODO
         if (this.owner.hasSessionId(sessionId)) {
             this.owner = this.joiner;
             this.joiner = null;
@@ -55,15 +55,15 @@ public class Room {
         return (this.owner == null);
     }
 
-    public String[] getSessionIds() {
-        String[] ids;
+    public User[] getListeners() {
+        User[] ids;
         if (this.joiner == null) {
-            ids = new String[1];
-            ids[0] = this.owner.getSessionId();
+            ids = new User[1];
+            ids[0] = this.owner;
         } else {
-            ids = new String[2];
-            ids[0] = this.owner.getSessionId();
-            ids[1] = this.joiner.getSessionId();
+            ids = new User[2];
+            ids[0] = this.owner;
+            ids[1] = this.joiner;
         }
         return ids;
     }
