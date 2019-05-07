@@ -70,7 +70,7 @@ public class Room {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+	StringBuilder sb = new StringBuilder();
         sb.append("Room{");
         sb.append("name='");
         sb.append(name);

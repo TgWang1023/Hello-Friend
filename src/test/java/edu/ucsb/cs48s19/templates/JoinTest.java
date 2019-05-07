@@ -9,14 +9,14 @@ import org.junit.Before;
 
 public class JoinTest {
 
-    private Message testJoin;
-    private Message secondTestJoin;
+    private JoinRequest testJoin;
+    private JoinRequest secondTestJoin;
 
      @Before public void setUp() {
 	 testJoin = new JoinRequest("Derek Bang", "test room", "Klingonee", 47);
      }
     @Before public void create() {
-	 secondTestJoin = new Message();
+	 secondTestJoin = new JoinRequest();
 	 secondTestJoin.setUserName("Derek Bang");
     }
     
@@ -26,12 +26,12 @@ public class JoinTest {
     }
 
     @Test
-    public void test_getUserName() {
+    public void test_getUserName2() {
 	assertEquals(testJoin.getUserName(), secondTestJoin.getUserName());
     }
 
     @Test
-    public void test_toString() {
-	assertEquals("JoinRequest{userName=Derek Bang\', roomName='test room\', userLanguage='Klingonee\', request=47}", testJoin.toString());
+    public void test_toString2() {
+	assertEquals("JoinRequest{userName='Derek Bang\', roomName='test room\', userLanguage='Klingonee\', request=47}", testJoin.toString());
     }
 }

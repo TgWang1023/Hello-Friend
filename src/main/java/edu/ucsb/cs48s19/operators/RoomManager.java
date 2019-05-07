@@ -27,14 +27,10 @@ public class RoomManager {
         User owner = new User(joinRequest.getUserName(),
                 joinRequest.getUserLanguage(),
                 sessionId);
-//        System.out.println(owner);
         Room newRoom = new Room(joinRequest.getRoomName(), owner);
-//        System.out.println(newRoom);
 
         roomNameToRoom.put(joinRequest.getRoomName(), newRoom);
         sessionIdToRoom.put(sessionId, newRoom);
-
-//        System.out.println(sessionIdToRoom);
 
         return true;
     }
@@ -46,18 +42,15 @@ public class RoomManager {
         User joiner = new User(joinRequest.getUserName(),
                 joinRequest.getUserLanguage(),
                 sessionId);
-//        System.out.println(joiner);
         Room targetRoom = roomNameToRoom.get(joinRequest.getRoomName());
 
         if (targetRoom == null) {
-            System.out.println("No name doesn't accord any room!");
+            System.out.println("No room with that name!");
             return false;
         }
 
         if (targetRoom.joinUser(joiner)) {
-//            System.out.println(targetRoom);
             sessionIdToRoom.put(sessionId, targetRoom);
-//            System.out.println(sessionIdToRoom);
             return true;
         }
 
