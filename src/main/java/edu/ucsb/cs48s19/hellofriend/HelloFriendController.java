@@ -29,14 +29,24 @@ public class HelloFriendController {
             @DestinationVariable String postfix) throws Exception {
         Console.log(joinRequest.toString());
         String sessionId = Manager.getSessionId(prefix, postfix);
-        if (joinRequest.getRequest() == 1) {
+        if (joinRequest.getRequest() == JoinRequest.CREATE_REQUEST) {
             int createFlag = Manager.createRoom(joinRequest, sessionId);
-            if (createFlag != 10) {
+            if (createFlag != Manager.CREATE_SUCCESS) {
+                // incomplete form
+                if (createFlag == Manager.ERROR_STATE) {
+                    return new AdvancedMessage(
+                        "Please fill all entries in the form.",
+                        Manager.SYSTEM_FLAG,
+                        createFlag,
+                        Manager.SYSTEM_NAME,
+                        Manager.TO_SENDER_FLAG
+                    );
+                }
                 return new AdvancedMessage(
                         API_access.translate(
                                 "This room name has been occupied.",
                                 "en",
-                                "zh-CN"), // TODO: user's language
+                                joinRequest.getUserLanguage()), // user's language
                         Manager.SYSTEM_FLAG,
                         createFlag,
                         Manager.SYSTEM_NAME,
@@ -47,7 +57,7 @@ public class HelloFriendController {
                     API_access.translate(
                             "Create success.",
                             "en",
-                            "zh-TW"), // TODO: user's language
+                            joinRequest.getUserLanguage()), // user's language
                     Manager.SYSTEM_FLAG,
                     createFlag,
                     Manager.SYSTEM_NAME,
@@ -73,6 +83,17 @@ public class HelloFriendController {
                             Manager.TO_SENDER_FLAG
                     );
                 }
+                // incomplete form
+                else if (joinFlag == Manager.ERROR_STATE) {
+                    return new AdvancedMessage(
+                        "Please fill all entries in the form.",
+                        Manager.SYSTEM_FLAG,
+                        joinFlag,
+                        Manager.SYSTEM_NAME,
+                        Manager.TO_SENDER_FLAG
+                    );
+                }
+
             }
             return new AdvancedMessage(
                     "Join success.",

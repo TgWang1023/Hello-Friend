@@ -41,6 +41,10 @@ public class Manager {
             JoinRequest joinRequest,
             String sessionId) {
 
+        if (joinRequest.hasEmptyEntry()) {
+            return 1;
+        }
+
         if (roomNameToRoom.get(joinRequest.getRoomName()) != null) {
             Console.log("The room name is occupied!");
             return ROOM_NAME_OCCUPIED;
@@ -61,6 +65,10 @@ public class Manager {
     public static int joinRoom(
             JoinRequest joinRequest,
             String sessionId) {
+
+        if (joinRequest.hasEmptyEntry()) {
+            return 1;
+        }
 
         User joiner = new User(joinRequest.getUserName(),
                 joinRequest.getUserLanguage(),
