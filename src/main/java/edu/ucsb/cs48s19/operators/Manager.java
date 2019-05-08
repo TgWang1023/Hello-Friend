@@ -90,6 +90,32 @@ public class Manager {
         return ROOM_IS_FULL;
     }
 
+    public static AdvancedMessage systemMessage(int errorCode, String lang) {
+        String errorMessage = null;
+        switch(errorCode) {
+            case ROOM_NAME_OCCUPIED:
+                errorMessage = "This room name has been occupied.";
+            case ROOM_NOT_EXISTS:
+                errorMessage = "Join Failed. The room with the name doesn't exist.";
+            case ROOM_IS_FULL:
+                errorMessage = "Join Failed. The room is full.";
+        }
+        if (lang.compareTo("en") == 0) {
+            try {
+                errorMessage = API_access.translate(errorMessage, "en", lang);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return new AdvancedMessage(
+            errorMessage,
+            SYSTEM_FLAG,
+            errorCode,
+            SYSTEM_NAME,
+            TO_SENDER_FLAG
+        );
+    }
+
     public static String getSessionId(String pref, String postf) {
         return String.format("%s/%s", pref, postf);
     }
