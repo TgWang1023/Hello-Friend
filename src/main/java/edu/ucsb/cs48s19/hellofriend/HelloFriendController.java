@@ -1,12 +1,12 @@
+
 package edu.ucsb.cs48s19.hellofriend;
 
 import edu.ucsb.cs48s19.operators.Console;
 import edu.ucsb.cs48s19.operators.Manager;
-import edu.ucsb.cs48s19.templates.AdvancedMessage;
-import edu.ucsb.cs48s19.templates.JoinRequest;
-import edu.ucsb.cs48s19.templates.Message;
+import edu.ucsb.cs48s19.templates.*;
 //import edu.ucsb.cs48s19.translate.Translator;
-import edu.ucsb.cs48s19.templates.Pair;
+import edu.ucsb.cs48s19.translate.API_access;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.messaging.handler.annotation.*;
@@ -30,11 +30,24 @@ public class HelloFriendController {
             @DestinationVariable String postfix) throws Exception {
         Console.log(joinRequest.toString());
         String sessionId = Manager.getSessionId(prefix, postfix);
-        if (joinRequest.getRequest() == 1) {
+        if (joinRequest.getRequest() == JoinRequest.CREATE_REQUEST) {
             int createFlag = Manager.createRoom(joinRequest, sessionId);
-            if (createFlag != 10) {
+            if (createFlag != Manager.CREATE_SUCCESS) {
+                // incomplete form
+                if (createFlag == Manager.ERROR_STATE) {
+                    return new AdvancedMessage(
+                        "Please fill all entries in the form.",
+                        Manager.SYSTEM_FLAG,
+                        createFlag,
+                        Manager.SYSTEM_NAME,
+                        Manager.TO_SENDER_FLAG
+                    );
+                }
                 return new AdvancedMessage(
-                        "This room name has been occupied.",
+                        API_access.translate(
+                                "This room name has been occupied.",
+                                "en",
+                                joinRequest.getUserLanguage()), // user's language
                         Manager.SYSTEM_FLAG,
                         createFlag,
                         Manager.SYSTEM_NAME,
@@ -42,7 +55,10 @@ public class HelloFriendController {
                 );
             }
             return new AdvancedMessage(
-                    "Create success.",
+                    API_access.translate(
+                            "Create success.",
+                            "en",
+                            joinRequest.getUserLanguage()), // user's language
                     Manager.SYSTEM_FLAG,
                     createFlag,
                     Manager.SYSTEM_NAME,
@@ -68,6 +84,17 @@ public class HelloFriendController {
                             Manager.TO_SENDER_FLAG
                     );
                 }
+                // incomplete form
+                else if (joinFlag == Manager.ERROR_STATE) {
+                    return new AdvancedMessage(
+                        "Please fill all entries in the form.",
+                        Manager.SYSTEM_FLAG,
+                        joinFlag,
+                        Manager.SYSTEM_NAME,
+                        Manager.TO_SENDER_FLAG
+                    );
+                }
+
             }
             return new AdvancedMessage(
                     "Join success.",
@@ -84,8 +111,29 @@ public class HelloFriendController {
     public void disconnectUser(
             @DestinationVariable String prefix,
             @DestinationVariable String postfix) throws Exception {
-        Manager.removeUser(prefix, postfix);
+        User owner = Manager.removeUser(prefix, postfix);
         Console.log("Disconnect user.");
+        Console.log(owner);
+        if (owner != null) {
+            String dest = String.format(
+                    "/secured/user/queue/specific-room-user/%s",
+                    owner.getSessionId());
+            String quitMessage = "Another user has disconnected.";
+            if (owner.getLanguage().compareTo("en") != 0) {
+                quitMessage = API_access.translate(
+                        quitMessage,
+                        "en",
+                        owner.getLanguage());
+            }
+            ops.convertAndSend(dest, new AdvancedMessage(
+                    quitMessage,
+                    Manager.SYSTEM_FLAG,
+                    Manager.QUIT_SUCCESS,
+                    Manager.SYSTEM_NAME,
+                    Manager.TO_RECEIVER_FLAG
+            ));
+
+        }
     }
 
     // channel message
@@ -100,7 +148,7 @@ public class HelloFriendController {
         for (Pair pair: messageList) {
             String dest = String.format(
                     "/secured/user/queue/specific-room-user/%s",
-                    pair.getSessionId());
+                    pair.getReceiver().getSessionId());
             Console.log("Send message to " + dest);
             ops.convertAndSend(dest, pair.getMessage());
         }

@@ -1,3 +1,4 @@
+
 package edu.ucsb.cs48s19.operators;
 
 public class Console {
@@ -8,6 +9,7 @@ public class Console {
     }
 
     public static void log(Object o) {
+        if (o != null)
         System.out.println(o.toString());
     }
 }

@@ -1,6 +1,7 @@
 package edu.ucsb.cs48s19.operators;
 
 import edu.ucsb.cs48s19.templates.*;
+import edu.ucsb.cs48s19.translate.API_access;
 
 import java.util.HashMap;
 
@@ -12,6 +13,7 @@ public class Manager {
 
     public static final int CREATE_SUCCESS = 10;
     public static final int ROOM_NAME_OCCUPIED = 11;
+    public static final int QUIT_SUCCESS = 12;
 
     public static final int JOIN_SUCCESS = 20;
     public static final int ROOM_NOT_EXISTS = 21;
@@ -39,6 +41,10 @@ public class Manager {
             JoinRequest joinRequest,
             String sessionId) {
 
+        if (joinRequest.hasEmptyEntry()) {
+            return 1;
+        }
+
         if (roomNameToRoom.get(joinRequest.getRoomName()) != null) {
             Console.log("The room name is occupied!");
             return ROOM_NAME_OCCUPIED;
@@ -60,6 +66,10 @@ public class Manager {
             JoinRequest joinRequest,
             String sessionId) {
 
+        if (joinRequest.hasEmptyEntry()) {
+            return 1;
+        }
+
         User joiner = new User(joinRequest.getUserName(),
                 joinRequest.getUserLanguage(),
                 sessionId);
@@ -80,9 +90,30 @@ public class Manager {
         return ROOM_IS_FULL;
     }
 
-    private static void removeRoom(Room room) {
-        String roomName = room.getName();
-        roomNameToRoom.remove(roomName);
+    public static AdvancedMessage systemMessage(int errorCode, String lang) {
+        String errorMessage = null;
+        switch(errorCode) {
+            case ROOM_NAME_OCCUPIED:
+                errorMessage = "This room name has been occupied.";
+            case ROOM_NOT_EXISTS:
+                errorMessage = "Join Failed. The room with the name doesn't exist.";
+            case ROOM_IS_FULL:
+                errorMessage = "Join Failed. The room is full.";
+        }
+        if (lang.compareTo("en") == 0) {
+            try {
+                errorMessage = API_access.translate(errorMessage, "en", lang);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return new AdvancedMessage(
+            errorMessage,
+            SYSTEM_FLAG,
+            errorCode,
+            SYSTEM_NAME,
+            TO_SENDER_FLAG
+        );
     }
 
     public static String getSessionId(String pref, String postf) {
@@ -97,27 +128,29 @@ public class Manager {
      * The first session ID is sender's, then other receiver in the room.
      *      
      */
-    private static String[] getListeners(String sessionId) {
+    private static User[] getListeners(String sessionId) {
         Room room = sessionIdToRoom.get(sessionId);
         if (room == null) {
-            return new String[0];
+            return new User[0];
         }
-        String[] sessionIdList = room.getSessionIds();
+        User[] userList = room.getListeners();
         // if the first is not sender:
-        if (sessionId.compareTo(sessionIdList[0]) != 0) {
-            sessionIdList[1] = sessionIdList[0];
-            sessionIdList[0] = sessionId;
+        if (sessionId.compareTo(userList[0].getSessionId()) != 0) {
+            User temp = userList[1];
+            userList[1] = userList[0];
+            userList[0] = temp;
         }
-        return sessionIdList;
+        return userList;
     }
 
     private static Pair[] getMessageList(String sessionId, Message inMessage) {
-        String[] sessionIdList = getListeners(sessionId);
-        String senderName = userNameToUser.get(sessionId).getName();
-        Pair[] messageList = new Pair[sessionIdList.length];
+        User[] userList = getListeners(sessionId);
+        User sender = userList[0];
+        String senderName = sender.getName();
+        Pair[] messageList = new Pair[userList.length];
         // COMMENT: deal with sender's message to sender
         messageList[0] = new Pair(
-                sessionIdList[0],
+                userList[0],
                 new AdvancedMessage(
                         inMessage.getContent(),
                         Manager.NON_SYSTEM_FLAG,
@@ -126,18 +159,37 @@ public class Manager {
                         Manager.TO_SENDER_FLAG
                 )
         );
+        Console.log(messageList[0].toString());
         // COMMENT: deal with sender's message to receiver
         if (messageList.length > 1) {
+            String outMessage = inMessage.getContent();
+            // COMMENT: if not the same language, translate
+            if (userList[0].getLanguage()
+                    .compareTo(userList[1].getLanguage())
+                    != 0
+                ) {
+                try {
+                    outMessage = API_access.translate(
+                            outMessage,
+                            sender.getLanguage(),
+                            userList[1].getLanguage());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             messageList[1] = new Pair(
-                    sessionIdList[1],
+                    userList[1],
                     new AdvancedMessage(
-                            inMessage.getContent(),
+                            outMessage,
                             Manager.NON_SYSTEM_FLAG,
                             Manager.NORMAL_STATE,
                             senderName,
                             Manager.TO_RECEIVER_FLAG
                     )
             );
+            Console.log(messageList[1].toString());
+
         }
 
         return messageList;
@@ -151,21 +203,28 @@ public class Manager {
         return userNameToUser.get(sessionId).getName();
     }
 
-    public static void removeUser(String pref, String postf) {
+    public static User removeUser(String pref, String postf) {
         String sessionId = getSessionId(pref, postf);
         userNameToUser.remove(sessionId);
-        removeUserFromRoom(sessionId);
+        return removeUserFromRoom(sessionId);
     }
 
-    private static void removeUserFromRoom(String sessionId) {
+    private static User removeUserFromRoom(String sessionId) {
         Room room = sessionIdToRoom.get(sessionId);
-        if (room == null) { return; }
+        if (room == null) { return null; }
         boolean flag = room.removeUser(sessionId);
         sessionIdToRoom.remove(sessionId);
         if (flag) {
             Console.log("Remove room.");
             removeRoom(room);
+            return null;
         }
+        return room.getOwner();
+    }
+
+    private static void removeRoom(Room room) {
+        String roomName = room.getName();
+        roomNameToRoom.remove(roomName);
     }
 
 
