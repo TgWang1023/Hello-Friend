@@ -33,26 +33,7 @@ public class HelloFriendController {
         if (joinRequest.getRequest() == JoinRequest.CREATE_REQUEST) {
             int createFlag = Manager.createRoom(joinRequest, sessionId);
             if (createFlag != Manager.CREATE_SUCCESS) {
-                // incomplete form
-                if (createFlag == Manager.ERROR_STATE) {
-                    return new AdvancedMessage(
-                        "Please fill all entries in the form.",
-                        Manager.SYSTEM_FLAG,
-                        createFlag,
-                        Manager.SYSTEM_NAME,
-                        Manager.TO_SENDER_FLAG
-                    );
-                }
-                return new AdvancedMessage(
-                        API_access.translate(
-                                "This room name has been occupied.",
-                                "en",
-                                joinRequest.getUserLanguage()), // user's language
-                        Manager.SYSTEM_FLAG,
-                        createFlag,
-                        Manager.SYSTEM_NAME,
-                        Manager.TO_SENDER_FLAG
-                );
+                return Manager.systemMessage(createFlag, joinRequest.getUserLanguage());
             }
             return new AdvancedMessage(
                     API_access.translate(
@@ -67,33 +48,7 @@ public class HelloFriendController {
         } else {
             int joinFlag = Manager.joinRoom(joinRequest, sessionId);
             if (joinFlag != Manager.JOIN_SUCCESS) {
-                if (joinFlag == Manager.ROOM_NOT_EXISTS) {
-                    return new AdvancedMessage(
-                            "Join Failed. No such room with the name.",
-                            Manager.SYSTEM_FLAG,
-                            joinFlag,
-                            Manager.SYSTEM_NAME,
-                            Manager.TO_SENDER_FLAG
-                    );
-                } else if (joinFlag == Manager.ROOM_IS_FULL) {
-                    return new AdvancedMessage(
-                            "Join Failed. The room is full.",
-                            Manager.SYSTEM_FLAG,
-                            joinFlag,
-                            Manager.SYSTEM_NAME,
-                            Manager.TO_SENDER_FLAG
-                    );
-                }
-                // incomplete form
-                else if (joinFlag == Manager.ERROR_STATE) {
-                    return new AdvancedMessage(
-                        "Please fill all entries in the form.",
-                        Manager.SYSTEM_FLAG,
-                        joinFlag,
-                        Manager.SYSTEM_NAME,
-                        Manager.TO_SENDER_FLAG
-                    );
-                }
+                return Manager.systemMessage(joinFlag, joinRequest.getUserLanguage());
             }
             // send system message to the room owner
             String ownerDest = String.format(
@@ -120,26 +75,14 @@ public class HelloFriendController {
             @DestinationVariable String postfix) throws Exception {
         User owner = Manager.removeUser(prefix, postfix);
         Console.log("Disconnect user.");
-        Console.log(owner);
+        // Console.log(owner);
         if (owner != null) {
             String dest = String.format(
                     "/secured/user/queue/specific-room-user/%s",
                     owner.getSessionId());
-            String quitMessage = "Another user has disconnected.";
-            if (owner.getLanguage().compareTo("en") != 0) {
-                quitMessage = API_access.translate(
-                        quitMessage,
-                        "en",
-                        owner.getLanguage());
-            }
-            ops.convertAndSend(dest, new AdvancedMessage(
-                    quitMessage,
-                    Manager.SYSTEM_FLAG,
-                    Manager.QUIT_SUCCESS,
-                    Manager.SYSTEM_NAME,
-                    Manager.TO_RECEIVER_FLAG
-            ));
-
+            ops.convertAndSend(
+                dest, 
+                Manager.systemMessage(Manager.QUIT_SUCCESS, owner.getLanguage()));
         }
     }
 

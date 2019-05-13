@@ -110,6 +110,9 @@ public class Manager {
             case QUIT_SUCCESS:
                 errorMessage = "Another user has disconnected.";
                 break;
+            case ERROR_STATE:
+                errorMessage = "Please fill all entries in the form.";
+                break;
             default:
                 errorMessage = "System message.";
         }
