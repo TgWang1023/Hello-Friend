@@ -94,8 +94,18 @@ public class HelloFriendController {
                         Manager.TO_SENDER_FLAG
                     );
                 }
-
             }
+            // send system message to the room owner
+            String ownerDest = String.format(
+                "/secured/user/queue/specific-room-user/%s",
+                Manager.getRoomOwner(prefix, postfix).getSessionId());
+            ops.convertAndSend(ownerDest, new AdvancedMessage(
+                "A user has joined the room.",
+                Manager.SYSTEM_FLAG,
+                Manager.NORMAL_STATE,
+                Manager.SYSTEM_NAME,
+                Manager.TO_RECEIVER_FLAG
+            ));
             return new AdvancedMessage(
                     "Join success.",
                     Manager.SYSTEM_FLAG,

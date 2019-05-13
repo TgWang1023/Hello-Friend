@@ -13,6 +13,7 @@ public class Manager {
 
     public static final int CREATE_SUCCESS = 10;
     public static final int ROOM_NAME_OCCUPIED = 11;
+    public static final int JOIN_MESSAGE = 110;
     public static final int QUIT_SUCCESS = 12;
 
     public static final int JOIN_SUCCESS = 20;
@@ -93,26 +94,36 @@ public class Manager {
     public static AdvancedMessage systemMessage(int errorCode, String lang) {
         String errorMessage = null;
         switch(errorCode) {
+            // TODO: CREATE_SUCCESS/JOIN_SUCCESS
             case ROOM_NAME_OCCUPIED:
                 errorMessage = "This room name has been occupied.";
+                break;
             case ROOM_NOT_EXISTS:
                 errorMessage = "Join Failed. The room with the name doesn't exist.";
+                break;
             case ROOM_IS_FULL:
                 errorMessage = "Join Failed. The room is full.";
+                break;
+            case JOIN_MESSAGE:
+                errorMessage = "A user has joined the rooom.";
+                break;
+            case QUIT_SUCCESS:
+                errorMessage = "Another user has disconnected.";
+                break;
+            default:
+                errorMessage = "System message.";
         }
-        if (lang.compareTo("en") == 0) {
-            try {
-                errorMessage = API_access.translate(errorMessage, "en", lang);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            errorMessage = API_access.translate(errorMessage, "en", lang);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return new AdvancedMessage(
             errorMessage,
             SYSTEM_FLAG,
             errorCode,
             SYSTEM_NAME,
-            TO_SENDER_FLAG
+            TO_RECEIVER_FLAG
         );
     }
 
@@ -197,6 +208,10 @@ public class Manager {
 
     public static Pair[] getMessageList(String pref, String postf, Message inMessage) {
         return getMessageList(getSessionId(pref, postf), inMessage);
+    }
+
+    public static User getRoomOwner(String pref, String postf) {
+        return sessionIdToRoom.get(getSessionId(pref, postf)).getOwner();
     }
 
     public static String findUserName(String sessionId) {
