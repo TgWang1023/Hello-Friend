@@ -54,9 +54,9 @@ public class JoinRequest {
     }
 
     public boolean hasEmptyEntry() {
-        return (this.userName.compareTo("") == 0 || this.userName == null ||
-                this.roomName.compareTo("") == 0 || this.roomName == null ||
-                this.userLanguage.compareTo("") == 0 || this.userLanguage == null);
+        return (this.userName == null || this.userName.compareTo("") == 0 ||
+                this.roomName == null || this.roomName.compareTo("") == 0 ||
+                this.userLanguage == null || this.userLanguage.compareTo("") == 0);
     }
 
     @Override
