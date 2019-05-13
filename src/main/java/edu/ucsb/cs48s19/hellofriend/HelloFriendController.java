@@ -99,13 +99,10 @@ public class HelloFriendController {
             String ownerDest = String.format(
                 "/secured/user/queue/specific-room-user/%s",
                 Manager.getRoomOwner(prefix, postfix).getSessionId());
-            ops.convertAndSend(ownerDest, new AdvancedMessage(
-                "A user has joined the room.",
-                Manager.SYSTEM_FLAG,
-                Manager.NORMAL_STATE,
-                Manager.SYSTEM_NAME,
-                Manager.TO_RECEIVER_FLAG
-            ));
+            ops.convertAndSend(
+                ownerDest, 
+                Manager.systemMessage(Manager.JOIN_MESSAGE, Manager.getRoomOwner(prefix, postfix).getLanguage())
+            );
             return new AdvancedMessage(
                     "Join success.",
                     Manager.SYSTEM_FLAG,
