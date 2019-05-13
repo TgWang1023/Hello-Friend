@@ -1,160 +1,219 @@
-<!-- switch 控制tab切换 -->
+﻿   <!-- switch 控制tab切换 -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>Hello-Friend-Home</title>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
     <script type='text/javascript' src="/app.js"></script>
-    <!-- <script type='text/javascript' src="../static/js/home.js"></script> -->
-    <link rel="stylesheet" type="text/css" href="./css/home.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/home.css" />
+    <link href="./css/chat.css" rel="stylesheet">
+
 </head>
 
 <body>
-<div class="container">
-    <div class="product">
 
-        <div id="logo">
-          Hello-Friend
-        </div>
-
+<div class="container-fluid">
         <!-- connect and disconnect -->
-        <div class="row">
-            <div class="col-md-6">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <!-- <label for="connect">Connect to the server:</label> -->
-                        <button id="connect" class="s-btn" type="submit">Connect</button>
-                        <button id="disconnect" class="s-btn" type="submit" disabled="disabled">Disconnect
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <nav class="navbar navbar-light" style="background-color: #107595">
+          <form class="form-inline">
+            <button id="connect" class="btn btn-outline-light" type="submit">Connect</button>
+            <button id="disconnect" class="btn btn-outline-light" type="submit" disabled="disabled" >Disconnect</button>
+          </form>
+        </nav>
+
         <!-- connect and disconnect ends -->
+        <div class="row">
+          <div class="col-md-4">
 
-        <!-- create/join room form section -->
-        <div id="room_form">
-            <ul class="tab">
-                <li class="tab-item active">Create</li>
-                <li class="tab-item">Join</li>
-            </ul>
 
-            <div id="create_join" class="card">
-              <!-- create section -->
-                <div class="mod-box selected">
-                    <div id="create_room_section" class="mod-box-content">
-                        <form action="" method="post">
-                            <div style="position: relative;">
-                                <div class="form-item">
-                                    <label class="s-label mb4">Your Name</label>
-                                    <input type="text" id="user_name" name="name"
-                                           placeholder="Tom" class="s-input">
+
+            <!-- create/join room form section -->
+            <div id="room_form" class="show-card">
+                <ul class="tab">
+                    <li class="tab-item active">Create</li>
+                    <li class="tab-item">Join</li>
+                </ul>
+
+                <div id="create_join" class="cards">
+                  <!-- create section -->
+                    <div class="mod-box selected">
+                        <div id="create_room_section" class="mod-box-content">
+                            <form action="" method="post">
+                                <div style="position: relative;">
+                                    <div class="form-item">
+                                        <label class="s-label mb4">Your Name</label>
+                                        <input type="text" id="user_name" name="name"
+                                               placeholder="Tom" class="s-input">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div style="position: relative;">
-                                <div class="form-item">
-                                    <label class="s-label mb4">Your Language</label>
-                                    <input type="text" id="user_lang" name="language"
-                                           placeholder="English" class="s-input">
+                                <div style="position: relative;">
+                                    <div class="form-item">
+                                        <label class="s-label mb4">Your Language</label>
+                                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                        <option selected>Choose...</option>
+                                        <option value="English">English</option>
+                                        <option value="Korean">Korean</option>
+                                        <option value="Chinese">Chinese</option>
+                                      </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div style="position: relative;">
-                                <div class="form-item">
-                                    <label class="s-label mb4">Room Name</label>
-                                    <input type="text" id="room_name" name="roomN"
-                                           placeholder="12345" class="s-input">
+                                <div style="position: relative;">
+                                    <div class="form-item">
+                                        <label class="s-label mb4">Room Name</label>
+                                        <input type="text" id="room_name" name="roomN"
+                                               placeholder="12345" class="s-input">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <button id="create_room" class="s-btn" type="submit" tabindex="120">
-                                    create a room
-                                </button>
-                            </div>
-                        </form>
+                                <div>
+                                    <button id="create_room" class="s-btn" type="submit" tabindex="120">
+                                        create a room
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-                <!-- create section ends -->
+                    <!-- create section ends -->
 
-                <!-- join section -->
-                <div class="mod-box">
-                    <div id="join_room_section" class="mod-box-content">
-                        <form action="" method="post">
+                    <!-- join section -->
+                    <div class="mod-box">
+                        <div id="join_room_section" class="mod-box-content">
+                            <form action="" method="post">
 
-                            <div style="position: relative;">
-                                <div class="form-item">
-                                    <label class="s-label mb4">Your Name</label>
-                                    <input type="text" id="join_user_name" name="name"
-                                           placeholder="Jerry" class="s-input">
+                                <div style="position: relative;">
+                                    <div class="form-item">
+                                        <label class="s-label mb4">Your Name</label>
+                                        <input type="text" id="join_user_name" name="name"
+                                               placeholder="Jerry" class="s-input">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div style="position: relative;">
-                                <div class="form-item">
-                                    <label class="s-label mb4">Your Language</label>
-                                    <input type="text" id="join_user_lang" name="language"
-                                           placeholder="English" class="s-input">
+                                <div style="position: relative;">
+                                    <div class="form-item">
+                                        <label class="s-label mb4">Your Language</label>
+                                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                        <option selected>Choose...</option>
+                                        <option value="English">English</option>
+                                        <option value="Korean">Korean</option>
+                                        <option value="Chinese">Chinese</option>
+                                      </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div style="position: relative;">
-                                <div class="form-item">
-                                    <label class="s-label mb4">Room Name</label>
-                                    <input type="text" id="join_room_name" name="roomN"
-                                           placeholder="12345" class="s-input">
+                                <div style="position: relative;">
+                                    <div class="form-item">
+                                        <label class="s-label mb4">Room Name</label>
+                                        <input type="text" id="join_room_name" name="roomN"
+                                               placeholder="12345" class="s-input">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <button id="join_room" class="s-btn" type="submit" tabindex="120">
-                                    join a room
-                                </button>
-                            </div>
-                        </form>
+                                <div>
+                                    <button id="join_room" class="s-btn" type="submit" tabindex="120">
+                                        join a room
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-                <!-- join section ends -->
+                    <!-- join section ends -->
 
+                  </div>
+                </div>
+                <!-- create/join room section ends -->
+              </div>
+        <!--$$$$$$$$$$$$$$$$- -->
+        <!--$$$$$$$$$$$$$$$$- -->
+        <!-- chat section starts-->
+        <div class="col-md-4">
+          <div id="chat_section" class="show-card">
+            <div class="panel panel-primary">
+                <div class="panel-heading" id="accordion">
+                    <span class="glyphicon glyphicon-comment"></span>
+                    Chat
+                </div>
+
+                <div class="panel-body">
+                    <ul class="chat" id="conversation">
+                        <li class="left">
+                            <span class="d-inline-block chat-img">
+                                <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+                            </span>
+                            <span class="d-inline-block chat-body">
+                                <div class="header">
+                                    <strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted">
+                                        <span class="glyphicon glyphicon-time"></span>12 mins ago
+                                    </small>
+                                </div>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+                                    dolor, quis ullamcorper ligula sodales.
+                                </p>
+                            </span>
+                        </li>
+
+                        <li class="right">
+                          <span class="chat-img d-inline-block">
+                              <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
+                          </span>
+                            <span class="chat-body d-inline-block">
+                                <div class="header">
+
+                                    <strong class="pull-right primary-font">Bhaumik Patel</strong>
+                                    <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>13 mins ago</small>
+                                </div>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+                                    dolor, quis ullamcorper ligula sodales.
+                                </p>
+                            </span>
+
+                        </li>
+
+                    </ul>
+                </div>
             </div>
-        </div>
-        <!-- create/join room section ends -->
 
-<!--$$$$$$$$$$$$$$$$- -->
-<!--$$$$$$$$$$$$$$$$- -->
-<!-- chat section starts-->
-        <div id="chat_section">
-            <div id="section_title">
-                Chat Section
+            <div class="panel-footer" id="message_form">
+                <div class="input-group" >
+                    <input id="room_msg" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-warning btn-sm full-h" id="send_msg">
+                            Send
+                        </button>
+                    </span>
+                </div>
             </div>
-            <form id="message_form" >
-                <div class="form-group">
-                    <input type="text" id="room_msg" class="msg300px" placeholder="Hello!">
-                </div>
-                <button id="send_msg" class="msgbtn" type="submit">Send Message</button>
-            </form>
 
-                <div id="conversation">
-                    <div class="msg_container">Message</div>
-                </div>
-
+          </div>
         </div>
+
+          <div class="col-md-4">
+            <div id="video" class="show-card">
+            </div>
+          </div>
+      </div>
+
         <!-- chat section ends -->
-<!--$$$$$$$$$$$$$$$$- -->
-<!--$$$$$$$$$$$$$$$$- -->
+        <!--$$$$$$$$$$$$$$$$- -->
+        <!--$$$$$$$$$$$$$$$$- -->
 
     </div>
-</div>
+
 </body>
 
 <script type="text/javascript">
 $(function(){
+
 //控制tab切换
 $("#create_join .mod-box").eq(0).show().siblings().hide();
 $(".tab-item").click(function () {
