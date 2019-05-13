@@ -95,14 +95,20 @@ public class Manager {
         String errorMessage = null;
         switch(errorCode) {
             // TODO: CREATE_SUCCESS/JOIN_SUCCESS
+            case CREATE_SUCCESS:
+                errorMessage = "Create success.";
+                break;
+            case JOIN_SUCCESS:
+                errorMessage = "Join success.";
+                break;
             case ROOM_NAME_OCCUPIED:
-                errorMessage = "This room name has been occupied.";
+                errorMessage = "Create failed. This room name has been occupied.";
                 break;
             case ROOM_NOT_EXISTS:
-                errorMessage = "Join Failed. The room with the name doesn't exist.";
+                errorMessage = "Join failed. The room with the name doesn't exist.";
                 break;
             case ROOM_IS_FULL:
-                errorMessage = "Join Failed. The room is full.";
+                errorMessage = "Join failed. The room is full.";
                 break;
             case JOIN_MESSAGE:
                 errorMessage = "A user has joined the rooom.";
@@ -111,7 +117,7 @@ public class Manager {
                 errorMessage = "Another user has disconnected.";
                 break;
             case ERROR_STATE:
-                errorMessage = "Please fill all entries in the form.";
+                errorMessage = "Error: Please fill all entries in the form.";
                 break;
             default:
                 errorMessage = "System message.";

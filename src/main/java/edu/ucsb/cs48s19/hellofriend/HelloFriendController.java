@@ -35,16 +35,7 @@ public class HelloFriendController {
             if (createFlag != Manager.CREATE_SUCCESS) {
                 return Manager.systemMessage(createFlag, joinRequest.getUserLanguage());
             }
-            return new AdvancedMessage(
-                    API_access.translate(
-                            "Create success.",
-                            "en",
-                            joinRequest.getUserLanguage()), // user's language
-                    Manager.SYSTEM_FLAG,
-                    createFlag,
-                    Manager.SYSTEM_NAME,
-                    Manager.TO_SENDER_FLAG
-            );
+            return Manager.systemMessage(createFlag, joinRequest.getUserLanguage());
         } else {
             int joinFlag = Manager.joinRoom(joinRequest, sessionId);
             if (joinFlag != Manager.JOIN_SUCCESS) {
@@ -58,13 +49,7 @@ public class HelloFriendController {
                 ownerDest, 
                 Manager.systemMessage(Manager.JOIN_MESSAGE, Manager.getRoomOwner(prefix, postfix).getLanguage())
             );
-            return new AdvancedMessage(
-                    "Join success.",
-                    Manager.SYSTEM_FLAG,
-                    joinFlag,
-                    Manager.SYSTEM_NAME,
-                    Manager.TO_SENDER_FLAG
-            );
+            return Manager.systemMessage(joinFlag, joinRequest.getUserLanguage());
         }
     }
 
