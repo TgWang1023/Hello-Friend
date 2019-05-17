@@ -42,16 +42,19 @@ public class RoomTest {
 
     @Test
     public void test_isFull2() {
+        testRoom.joinUser(testUserTwo);
 	assertEquals(true, testRoom.isFull());
 	}
 
     @Test
       public void test_joinUser2() {
+	testRoom.joinUser(testUserTwo);
     	assertEquals(false, testRoom.joinUser(testUserTwo));
     }
 	    
     @Test
     public void test_toString() {
+	        testRoom.joinUser(testUserTwo);
 	assertEquals("Room{name='Tanagra\', owner=Picard, joiner=Dathon}", testRoom.toString());
     }
 }
