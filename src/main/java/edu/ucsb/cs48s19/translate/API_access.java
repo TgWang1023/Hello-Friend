@@ -28,6 +28,10 @@ public class API_access {
     // text: Original text. source_code: Source language rep code. target_code: Target language rep code
     // For detailed availibility of text translation codes, visit https://cloud.google.com/translate/docs/languages
     public static String translate(String text, String source_code, String target_code) throws Exception {
+        // check if no translation needed
+        if (source_code.compareTo(target_code) == 0) {
+            return text;
+        }
         // Instantiates a client
         Translate translate = TranslateOptions.getDefaultInstance().getService();
 

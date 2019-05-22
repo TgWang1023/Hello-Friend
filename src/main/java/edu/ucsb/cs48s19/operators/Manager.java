@@ -13,6 +13,7 @@ public class Manager {
 
     public static final int CREATE_SUCCESS = 10;
     public static final int ROOM_NAME_OCCUPIED = 11;
+    public static final int JOIN_MESSAGE = 110;
     public static final int QUIT_SUCCESS = 12;
 
     public static final int JOIN_SUCCESS = 20;
@@ -41,6 +42,10 @@ public class Manager {
             JoinRequest joinRequest,
             String sessionId) {
 
+        if (joinRequest.hasEmptyEntry()) {
+            return 1;
+        }
+
         if (roomNameToRoom.get(joinRequest.getRoomName()) != null) {
             Console.log("The room name is occupied!");
             return ROOM_NAME_OCCUPIED;
@@ -62,6 +67,10 @@ public class Manager {
             JoinRequest joinRequest,
             String sessionId) {
 
+        if (joinRequest.hasEmptyEntry()) {
+            return 1;
+        }
+
         User joiner = new User(joinRequest.getUserName(),
                 joinRequest.getUserLanguage(),
                 sessionId);
@@ -80,6 +89,51 @@ public class Manager {
         }
 
         return ROOM_IS_FULL;
+    }
+
+    public static AdvancedMessage systemMessage(int errorCode, String lang) {
+        String errorMessage = null;
+        switch(errorCode) {
+            // TODO: CREATE_SUCCESS/JOIN_SUCCESS
+            case CREATE_SUCCESS:
+                errorMessage = "Create success.";
+                break;
+            case JOIN_SUCCESS:
+                errorMessage = "Join success.";
+                break;
+            case ROOM_NAME_OCCUPIED:
+                errorMessage = "Create failed. This room name has been occupied.";
+                break;
+            case ROOM_NOT_EXISTS:
+                errorMessage = "Join failed. The room with the name doesn't exist.";
+                break;
+            case ROOM_IS_FULL:
+                errorMessage = "Join failed. The room is full.";
+                break;
+            case JOIN_MESSAGE:
+                errorMessage = "A user has joined the rooom.";
+                break;
+            case QUIT_SUCCESS:
+                errorMessage = "Another user has disconnected.";
+                break;
+            case ERROR_STATE:
+                errorMessage = "Error: Please fill all entries in the form.";
+                break;
+            default:
+                errorMessage = "System message.";
+        }
+        try {
+            errorMessage = API_access.translate(errorMessage, "en", lang);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new AdvancedMessage(
+            errorMessage,
+            SYSTEM_FLAG,
+            errorCode,
+            SYSTEM_NAME,
+            TO_RECEIVER_FLAG
+        );
     }
 
     public static String getSessionId(String pref, String postf) {
@@ -163,6 +217,10 @@ public class Manager {
 
     public static Pair[] getMessageList(String pref, String postf, Message inMessage) {
         return getMessageList(getSessionId(pref, postf), inMessage);
+    }
+
+    public static User getRoomOwner(String pref, String postf) {
+        return sessionIdToRoom.get(getSessionId(pref, postf)).getOwner();
     }
 
     public static String findUserName(String sessionId) {
