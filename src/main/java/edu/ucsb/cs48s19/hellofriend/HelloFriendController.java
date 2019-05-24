@@ -5,7 +5,7 @@ import edu.ucsb.cs48s19.operators.Console;
 import edu.ucsb.cs48s19.operators.Manager;
 import edu.ucsb.cs48s19.templates.*;
 //import edu.ucsb.cs48s19.translate.Translator;
-import edu.ucsb.cs48s19.translate.API_access;
+//import edu.ucsb.cs48s19.translate.API_access;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.core.MessageSendingOperations;
@@ -27,7 +27,7 @@ public class HelloFriendController {
     public AdvancedMessage connectUser(
             @NotNull JoinRequest joinRequest,
             @DestinationVariable String prefix,
-            @DestinationVariable String postfix) throws Exception {
+            @DestinationVariable String postfix) {
         Console.log(joinRequest.toString());
         String sessionId = Manager.getSessionId(prefix, postfix);
         if (joinRequest.getRequest() == JoinRequest.CREATE_REQUEST) {
@@ -57,7 +57,7 @@ public class HelloFriendController {
     @MessageMapping("/secured/user/disconnect/{prefix}/{postfix}")
     public void disconnectUser(
             @DestinationVariable String prefix,
-            @DestinationVariable String postfix) throws Exception {
+            @DestinationVariable String postfix) {
         User owner = Manager.removeUser(prefix, postfix);
         Console.log("Disconnect user.");
         // Console.log(owner);
@@ -76,7 +76,7 @@ public class HelloFriendController {
     public void channelMessage(
             @Payload Message message,
             @DestinationVariable String prefix,
-            @DestinationVariable String postfix) throws Exception {
+            @DestinationVariable String postfix) {
         Console.log(message);
 
         Pair[] messageList = Manager.getMessageList(prefix, postfix, message);
