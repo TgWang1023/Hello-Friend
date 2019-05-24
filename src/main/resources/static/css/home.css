@@ -6,8 +6,7 @@ html, body {
 font-family: 'Lato', sans-serif;
 }
 
-.container{
-    width: 100%;
+.container-fluid{
     height:100%;
     overflow: hidden;
     justify-content: center;
@@ -16,19 +15,17 @@ font-family: 'Lato', sans-serif;
     background-repeat: no-repeat;
     background-size: cover;
  }
-
- .product{
-   width:400px;
-   margin-left: auto;
-   margin-right: auto;
+ .row{
+   margin-top: 50px;
+   margin-bottom: auto;
+   padding-top: 10px;
  }
 
- #logo{
-   color:#fff5eb;
-   font-size: 40px;
-   margin-left: auto;
-   margin-right: auto;
+ .btn{
+   margin-left: 2px;
+   margin-right: 5px;
  }
+
  .form-group{
    width:400px;
    display:inline;
@@ -38,13 +35,18 @@ font-family: 'Lato', sans-serif;
    margin-bottom: 8px;
  }
 
- .card{
+ .cards{
    margin-left: auto;
    margin-right: auto;
    width:400px;
    justify-content: center;
  }
 
+.show-card{
+  height:494px;
+  border: 2px dotted white;
+  border-radius: 2px;
+}
 
  .mb4{
      margin-bottom: 4px !important;
@@ -52,7 +54,7 @@ font-family: 'Lato', sans-serif;
 
  .s-label{
      padding: 0 2px;
-     color: #fff5eb;
+     color: #222831;
      font-family: inherit;
      font-size: 1.15384615rem;
      font-weight: 700;
@@ -70,6 +72,7 @@ font-family: 'Lato', sans-serif;
      font-family: inherit;
      line-height: 1.02366864;
  }
+
 
  .s-btn{
      width:180px;
@@ -89,8 +92,11 @@ font-family: 'Lato', sans-serif;
    list-style: none;
  }
  .tab {
+   margin-top: 5px;
+   margin-left: auto;
+   margin-right: auto;
    padding:0;
-  border-bottom: 0;
+   border-bottom: 0;
    height: 36px;
    width: 400px;
  }
@@ -103,7 +109,7 @@ font-family: 'Lato', sans-serif;
    height: 34px;
    line-height: 34px;
    text-align: center;
-   color:#fff5eb;
+   color:#222831;
    cursor: pointer;
    border-top: 4px solid #fff;
  }
@@ -149,17 +155,7 @@ font-family: 'Lato', sans-serif;
    font-size: 30px;
  }
 
-#conversation{
-  margin-top: 5px;
-  margin-bottom: 5px;
-  overflow-y:scroll;
-  margin-left: auto;
-  margin-right: auto;
-  width:400px;
-  height:420px;
-  border:3px solid white;
-  border-radius: 4px;
-}
+
 
 .msg_container{
   word-wrap: break-word;

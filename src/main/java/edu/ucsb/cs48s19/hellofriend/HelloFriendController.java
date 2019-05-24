@@ -1,10 +1,11 @@
+
 package edu.ucsb.cs48s19.hellofriend;
 
 import edu.ucsb.cs48s19.operators.Console;
 import edu.ucsb.cs48s19.operators.Manager;
 import edu.ucsb.cs48s19.templates.*;
 //import edu.ucsb.cs48s19.translate.Translator;
-import edu.ucsb.cs48s19.translate.API_access;
+//import edu.ucsb.cs48s19.translate.API_access;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.core.MessageSendingOperations;
@@ -26,61 +27,29 @@ public class HelloFriendController {
     public AdvancedMessage connectUser(
             @NotNull JoinRequest joinRequest,
             @DestinationVariable String prefix,
-            @DestinationVariable String postfix) throws Exception {
+            @DestinationVariable String postfix) {
         Console.log(joinRequest.toString());
         String sessionId = Manager.getSessionId(prefix, postfix);
-        if (joinRequest.getRequest() == 1) {
+        if (joinRequest.getRequest() == JoinRequest.CREATE_REQUEST) {
             int createFlag = Manager.createRoom(joinRequest, sessionId);
-            if (createFlag != 10) {
-                return new AdvancedMessage(
-                        API_access.translate(
-                                "This room name has been occupied.",
-                                "en",
-                                "zh-CN"), // TODO: user's language
-                        Manager.SYSTEM_FLAG,
-                        createFlag,
-                        Manager.SYSTEM_NAME,
-                        Manager.TO_SENDER_FLAG
-                );
+            if (createFlag != Manager.CREATE_SUCCESS) {
+                return Manager.systemMessage(createFlag, joinRequest.getUserLanguage());
             }
-            return new AdvancedMessage(
-                    API_access.translate(
-                            "Create success.",
-                            "en",
-                            "zh-TW"), // TODO: user's language
-                    Manager.SYSTEM_FLAG,
-                    createFlag,
-                    Manager.SYSTEM_NAME,
-                    Manager.TO_SENDER_FLAG
-            );
+            return Manager.systemMessage(createFlag, joinRequest.getUserLanguage());
         } else {
             int joinFlag = Manager.joinRoom(joinRequest, sessionId);
             if (joinFlag != Manager.JOIN_SUCCESS) {
-                if (joinFlag == Manager.ROOM_NOT_EXISTS) {
-                    return new AdvancedMessage(
-                            "Join Failed. No such room with the name.",
-                            Manager.SYSTEM_FLAG,
-                            joinFlag,
-                            Manager.SYSTEM_NAME,
-                            Manager.TO_SENDER_FLAG
-                    );
-                } else if (joinFlag == Manager.ROOM_IS_FULL) {
-                    return new AdvancedMessage(
-                            "Join Failed. The room is full.",
-                            Manager.SYSTEM_FLAG,
-                            joinFlag,
-                            Manager.SYSTEM_NAME,
-                            Manager.TO_SENDER_FLAG
-                    );
-                }
+                return Manager.systemMessage(joinFlag, joinRequest.getUserLanguage());
             }
-            return new AdvancedMessage(
-                    "Join success.",
-                    Manager.SYSTEM_FLAG,
-                    joinFlag,
-                    Manager.SYSTEM_NAME,
-                    Manager.TO_SENDER_FLAG
+            // send system message to the room owner
+            String ownerDest = String.format(
+                "/secured/user/queue/specific-room-user/%s",
+                Manager.getRoomOwner(prefix, postfix).getSessionId());
+            ops.convertAndSend(
+                ownerDest, 
+                Manager.systemMessage(Manager.JOIN_MESSAGE, Manager.getRoomOwner(prefix, postfix).getLanguage())
             );
+            return Manager.systemMessage(joinFlag, joinRequest.getUserLanguage());
         }
     }
 
@@ -88,29 +57,17 @@ public class HelloFriendController {
     @MessageMapping("/secured/user/disconnect/{prefix}/{postfix}")
     public void disconnectUser(
             @DestinationVariable String prefix,
-            @DestinationVariable String postfix) throws Exception {
+            @DestinationVariable String postfix) {
         User owner = Manager.removeUser(prefix, postfix);
         Console.log("Disconnect user.");
-        Console.log(owner);
+        // Console.log(owner);
         if (owner != null) {
             String dest = String.format(
                     "/secured/user/queue/specific-room-user/%s",
                     owner.getSessionId());
-            String quitMessage = "Another user has disconnected.";
-            if (owner.getLanguage().compareTo("en") != 0) {
-                quitMessage = API_access.translate(
-                        quitMessage,
-                        "en",
-                        owner.getLanguage());
-            }
-            ops.convertAndSend(dest, new AdvancedMessage(
-                    quitMessage,
-                    Manager.SYSTEM_FLAG,
-                    Manager.QUIT_SUCCESS,
-                    Manager.SYSTEM_NAME,
-                    Manager.TO_RECEIVER_FLAG
-            ));
-
+            ops.convertAndSend(
+                dest, 
+                Manager.systemMessage(Manager.QUIT_SUCCESS, owner.getLanguage()));
         }
     }
 
@@ -119,7 +76,7 @@ public class HelloFriendController {
     public void channelMessage(
             @Payload Message message,
             @DestinationVariable String prefix,
-            @DestinationVariable String postfix) throws Exception {
+            @DestinationVariable String postfix) {
         Console.log(message);
 
         Pair[] messageList = Manager.getMessageList(prefix, postfix, message);

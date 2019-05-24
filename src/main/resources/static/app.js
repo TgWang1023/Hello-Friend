@@ -1,6 +1,6 @@
 var stompClient = null;
 var sessionId = "";
-var url = null
+var url = null;
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -10,8 +10,7 @@ function setConnected(connected) {
 
     }
     else {
-        $("#section_title").hide();
-        $("#conversation").hide();
+        $("#chat_section").hide();
         $("#room_form").hide();
         $("#message_form").hide();
     }
@@ -32,7 +31,6 @@ function connect() {
         setConnected(true);
         stompClient.subscribe('/secured/user/queue/specific-room'
             + '-user' + sessionId, function (greeting) {
-//                showMessage(JSON.parse(greeting.body).content);
                 processMessage(JSON.parse(greeting.body))
         });
     });
@@ -88,21 +86,33 @@ function sendMessage() {
 function processMessage(message) {
     if (message.systemFlag) {
         if (message.infoCode == 10 || message.infoCode == 20) {
-            $("logo").hide();
             $("#room_form").hide();
             $("#message_form").show();
-            $("#section_title").show();
-            $("#conversation").show();
-        }
-    }
-    $("#conversation").show();
+            $("#chat_section").show();
 
-    showMessage(message.content);
+        }
+
+    }
+    $("#chat_section").show();
+    showMessage(message);
     console.log(message);
 }
 
 function showMessage(message) {
-    $("#conversation").append("<div class=\"msg_container\">" + message + "</div>");
+    var today = new Date();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    if (message.systemFlag==false){
+        if (message.toReceiver==true){
+            $("#conversation").append("<li class=\"left\"><span class=\"d-inline-block chat-img\"><img src=\"http://placehold.it/50/55C1E7/fff&text=U\" alt=\"User Avatar\" class=\"img-circle\" /></span><span class=\"d-inline-block chat-body\"><div class=\"header\"><strong class=\"primary-font\">"+message.sender+"</strong> <small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>"+time+"</small ></div><p>" + message.content + "</p></div></li>");
+        }
+        else{
+          $("#conversation").append("<li class=\"left\"><span class=\"d-inline-block chat-img\"><img src=\"http://placehold.it/50/FA6F57/fff&text=ME\" alt=\"User Avatar\" class=\"img-circle\" /></span><span class=\"d-inline-block chat-body\"><div class=\"header\"><strong class=\"primary-font\">"+message.sender+"</strong> <small class=\"pull-right text-muted\"><span class=\"glyphicon glyphicon-time\"></span>"+time+"</small ></div><p>" + message.content + "</p></div></li>");
+        }
+    }
+    if (message.systemFlag==true){
+        $("#conversation").append("<li>"+message.content+"</li>");
+    }
+
 }
 
 $(function () {
