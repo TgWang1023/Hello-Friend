@@ -6,8 +6,7 @@ html, body {
 font-family: 'Lato', sans-serif;
 }
 
-.container{
-    width: 100%;
+.container-fluid{
     height:100%;
     overflow: hidden;
     justify-content: center;
@@ -16,21 +15,38 @@ font-family: 'Lato', sans-serif;
     background-repeat: no-repeat;
     background-size: cover;
  }
-
- .product{
-   width:360px;
-   margin-top: 360px;
-   margin-left: auto;
-   margin-right: auto;
+ .row{
+   margin-top: 50px;
+   margin-bottom: auto;
+   padding-top: 10px;
  }
 
- .card{
+ .btn{
+   margin-left: 2px;
+   margin-right: 5px;
+ }
+
+ .form-group{
+   width:400px;
+   display:inline;
+   justify-content: center;
+ }
+ .row{
+   margin-bottom: 8px;
+ }
+
+ .cards{
    margin-left: auto;
    margin-right: auto;
    width:400px;
    justify-content: center;
  }
 
+.show-card{
+  height:494px;
+  border: 2px dotted white;
+  border-radius: 2px;
+}
 
  .mb4{
      margin-bottom: 4px !important;
@@ -38,7 +54,7 @@ font-family: 'Lato', sans-serif;
 
  .s-label{
      padding: 0 2px;
-     color: #fff5eb;
+     color: #222831;
      font-family: inherit;
      font-size: 1.15384615rem;
      font-weight: 700;
@@ -57,11 +73,13 @@ font-family: 'Lato', sans-serif;
      line-height: 1.02366864;
  }
 
+
  .s-btn{
+     width:180px;
      background-color: #4CAF50;
      border: none;
      color: white;
-     padding: 15px 32px;
+     padding: 15px 5px;
      text-align: center;
      text-decoration: none;
      display: inline-block;
@@ -74,21 +92,24 @@ font-family: 'Lato', sans-serif;
    list-style: none;
  }
  .tab {
+   margin-top: 5px;
+   margin-left: auto;
+   margin-right: auto;
    padding:0;
-  border-bottom: 0;
+   border-bottom: 0;
    height: 36px;
-   width: 360px;
+   width: 400px;
  }
 
  .tab li {
    font-size: 30px;
    position: relative;
    float: left;
-   width: 180px;
+   width: 200px;
    height: 34px;
    line-height: 34px;
    text-align: center;
-   color:#fff5eb;
+   color:#222831;
    cursor: pointer;
    border-top: 4px solid #fff;
  }
@@ -123,3 +144,39 @@ font-family: 'Lato', sans-serif;
    margin-left: auto;
    margin-right: auto;
  }
+
+ #chat_section{
+   border-top: 5px, solid, white;
+ }
+ #section_title{
+   margin-left: auto;
+   margin-right: auto;
+   color: #085f63;
+   font-size: 30px;
+ }
+
+
+
+.msg_container{
+  word-wrap: break-word;
+  margin-left: 2px;
+  width:250px;
+  margin-top: 5px;
+  border: 2px solid #085f63;
+  border-radius: 3px;
+}
+
+.msg300px{
+  height:40px;
+  background-color: Transparent;
+  color: white;
+  width:250px;
+}
+.msgbtn{
+  margin-left: 2px;
+  color:white;
+  height:40px;
+  background-color: Transparent;
+  border:5px solid #085f6;
+  border-radius: 3px;
+}

@@ -1,6 +1,12 @@
 package edu.ucsb.cs48s19.templates;
 
 public class JoinRequest {
+    
+    // CONSTANTS
+    public static final int CREATE_REQUEST = 1;
+    public static final int JOIN_REQUEST = 0;
+
+
     private String userName;
     private String roomName;
     private String userLanguage;
@@ -45,6 +51,12 @@ public class JoinRequest {
 
     public void setRequest(int request) {
         this.request = request;
+    }
+
+    public boolean hasEmptyEntry() {
+        return (this.userName == null || this.userName.compareTo("") == 0 ||
+                this.roomName == null || this.roomName.compareTo("") == 0 ||
+                this.userLanguage == null || this.userLanguage.compareTo("") == 0);
     }
 
     @Override

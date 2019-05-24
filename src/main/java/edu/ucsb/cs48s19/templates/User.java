@@ -13,7 +13,7 @@ public class User {
         this.sessionId = sessionId;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -29,7 +29,7 @@ public class User {
         this.language = language;
     }
 
-    String getSessionId() {
+    public String getSessionId() {
         return sessionId;
     }
 
