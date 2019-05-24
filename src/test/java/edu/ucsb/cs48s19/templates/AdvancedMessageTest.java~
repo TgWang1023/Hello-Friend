@@ -1,0 +1,45 @@
+package edu.ucsb.cs48s19.templates;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+
+import org.junit.Test;
+import org.junit.Before;
+
+public class AdvancedMessageTest {
+
+    private AdvancedMessage testAMessage;
+
+     @Before public void setUp() {
+	 testAMessage = new AdvancedMessage("this is content", true, 1, "Derek", true);
+    }
+    
+    @Test
+    public void test_getContent() {
+	assertEquals("this is content", testAMessage.getContent());
+    }
+
+    @Test
+    public void test_getContent2() {
+	testAMessage.setContent("this is still content");
+	assertEquals("this is still content", testAMessage.getContent());
+    }
+
+    @Test
+    public void test_isSystemFlag() {
+    	assertEquals(true, testAMessage.isSystemFlag());
+    }
+
+    @Test
+    public void test_isSystemFlag2() {
+	testAMessage.setSystemFlag(false);
+    	assertEquals(false, testAMessage.isSystemFlag());
+    }
+
+    //@Test
+    //public void test_toString() {
+    //assertEquals("Message{content='this is a test\'}", testMessage.toString());
+    //}
+}
+    
