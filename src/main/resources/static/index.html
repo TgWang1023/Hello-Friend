@@ -1,4 +1,4 @@
-﻿   <!-- switch 控制tab切换 -->
+﻿<!-- switch 控制tab切换 -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +12,7 @@
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 
     <script type='text/javascript' src="/app.js"></script>
-    <link rel="stylesheet" type="text/css" href="./css/home.css" />
+    <link rel="stylesheet" type="text/css" href="./css/home.css"/>
     <link href="./css/chat.css" rel="stylesheet">
 
 </head>
@@ -20,20 +20,18 @@
 <body>
 
 <div class="container-fluid">
-        <!-- connect and disconnect -->
-        <nav class="navbar navbar-light" style="background-color: #107595">
-          <form class="form-inline">
+    <!-- connect and disconnect -->
+    <nav class="navbar navbar-light" style="background-color: #107595">
+        <form class="form-inline">
             <button id="connect" class="btn btn-outline-light" type="submit">Connect</button>
-            <button id="disconnect" class="btn btn-outline-light" type="submit" disabled="disabled" >Disconnect</button>
-          </form>
-        </nav>
+            <button id="disconnect" class="btn btn-outline-light" type="submit" disabled="disabled">Disconnect</button>
+        </form>
+    </nav>
 
-        <!-- connect and disconnect ends -->
-        <div class="row">
-          <div class="col-md-4">
-
-
-
+    <!-- connect and disconnect ends -->
+    <div class="row">
+        <!-- room section -->
+        <div class="col-md-4">
             <!-- create/join room form section -->
             <div id="room_form" class="show-card">
                 <ul class="tab">
@@ -42,7 +40,7 @@
                 </ul>
 
                 <div id="create_join" class="cards">
-                  <!-- create section -->
+                    <!-- create section -->
                     <div class="mod-box selected">
                         <div id="create_room_section" class="mod-box-content">
                             <form action="" method="post">
@@ -58,13 +56,13 @@
                                     <div class="form-item">
                                         <label class="s-label mb4">Your Language</label>
                                         <select class="custom-select mr-sm-2" id="user_lang">
-                                        <option selected>Choose...</option>
-                                        <option value="en">English</option>
-                                        <option value="ja">Japanese</option>
-                                        <option value="ko">Korean</option>
-                                        <option value="zh-CN">Simplified Chinese</option>
-                                        <option value="zh-TW">Traditional Chinese</option>
-                                      </select>
+                                            <option selected>Choose...</option>
+                                            <option value="en">English</option>
+                                            <option value="ja">Japanese</option>
+                                            <option value="ko">Korean</option>
+                                            <option value="zh-CN">Simplified Chinese</option>
+                                            <option value="zh-TW">Traditional Chinese</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -103,13 +101,13 @@
                                     <div class="form-item">
                                         <label class="s-label mb4">Your Language</label>
                                         <select class="custom-select mr-sm-2" id="join_user_lang">
-                                        <option selected>Choose...</option>
-                                        <option value="en">English</option>
-                                        <option value="ja">Japanese</option>
-                                        <option value="ko">Korean</option>
-                                        <option value="zh-CN">Simplified Chinese</option>
-                                        <option value="zh-TW">Traditional Chinese</option>
-                                      </select>
+                                            <option selected>Choose...</option>
+                                            <option value="en">English</option>
+                                            <option value="ja">Japanese</option>
+                                            <option value="ko">Korean</option>
+                                            <option value="zh-CN">Simplified Chinese</option>
+                                            <option value="zh-TW">Traditional Chinese</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -131,30 +129,33 @@
                     </div>
                     <!-- join section ends -->
 
-                  </div>
                 </div>
-                <!-- create/join room section ends -->
-              </div>
+            </div>
+            <!-- create/join room section ends -->
+        </div>
         <!--$$$$$$$$$$$$$$$$- -->
         <!--$$$$$$$$$$$$$$$$- -->
-        <!-- chat section starts-->
-        <div class="col-md-4">
-          <div id="chat_section" class="show-card">
-            <div class="panel panel-primary">
-                <div class="panel-heading" id="accordion">
-                    <span class="glyphicon glyphicon-comment"></span>
-                    Chat
-                </div>
 
-                <div class="panel-body">
-                    <ul class="chat" id="conversation">
-                        <li class="left">
+        <!-- chat section -->
+        <div class="col-md-4">
+            <div id="chat_section" class="show-card">
+                <div class="panel panel-primary">
+                    <div class="panel-heading" id="accordion">
+                        <span class="glyphicon glyphicon-comment"></span>
+                        Chat
+                    </div>
+
+                    <div class="panel-body">
+                        <ul class="chat" id="conversation">
+                            <li class="left">
                             <span class="d-inline-block chat-img">
-                                <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+                                <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar"
+                                     class="img-circle"/>
                             </span>
-                            <span class="d-inline-block chat-body">
+                                <span class="d-inline-block chat-body">
                                 <div class="header">
-                                    <strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted">
+                                    <strong class="primary-font">Jack Sparrow</strong> <small
+                                        class="pull-right text-muted">
                                         <span class="glyphicon glyphicon-time"></span>12 mins ago
                                     </small>
                                 </div>
@@ -163,13 +164,14 @@
                                     dolor, quis ullamcorper ligula sodales.
                                 </p>
                             </span>
-                        </li>
+                            </li>
 
-                        <li class="right">
+                            <li class="right">
                           <span class="chat-img d-inline-block">
-                              <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
+                              <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar"
+                                   class="img-circle"/>
                           </span>
-                            <span class="chat-body d-inline-block">
+                                <span class="chat-body d-inline-block">
                                 <div class="header">
 
                                     <strong class="pull-right primary-font">Bhaumik Patel</strong>
@@ -181,52 +183,57 @@
                                 </p>
                             </span>
 
-                        </li>
+                            </li>
 
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
-            </div>
 
-            <div class="panel-footer" id="message_form">
-                <div class="input-group" >
-                    <input id="room_msg" type="text" class="form-control input-sm" placeholder="Type your message here..." />
-                    <span class="input-group-btn">
+                <div class="panel-footer" id="message_form">
+                    <div class="input-group">
+                        <input id="room_msg" type="text" class="form-control input-sm"
+                               placeholder="Type your message here..."/>
+                        <span class="input-group-btn">
                         <button class="btn btn-warning btn-sm full-h" id="send_msg">
                             Send
                         </button>
                     </span>
+                    </div>
                 </div>
-            </div>
 
-          </div>
+            </div>
         </div>
 
-          <div class="col-md-4">
+        <div class="col-md-4">
             <div id="audio" class="show-card">
-              <div class="row">
-                <button id="btn-start-recording">Start Recording</button>
-              </div>
-              <div class="row">
-                <button id="btn-stop-recording" disabled>Stop Recording</button>
-              </div>
-              <div class="row">
-                <button id="btn-release-microphone" disabled>Release Microphone</button>
-              </div>
-              <div class="row">
-                <button id="btn-download-recording" disabled>Download</button>
-              </div>
-              <div class="row">
-                <button id="btn-convert-base64">Convert Base64</button>
-              </div>
+                <div class="form-item">
+                    <button id="btn-start-recording">Start Recording</button>
+                </div>
+                <div class="form-item">
+                    <button id="btn-stop-recording" disabled>Stop Recording</button>
+                </div>
+                <div class="form-item">
+                    <button id="btn-release-microphone" disabled>Release Microphone</button>
+                </div>
+                <div class="form-item">
+                    <button id="btn-download-recording" disabled>Download</button>
+                </div>
+                <div class="form-item">
+                    <button id="btn-convert-base64">Convert Base64</button>
+                </div>
+                <div>
+                    <audio controls autoplay playsinline></audio>
+                </div>
+
             </div>
-          </div>
-      </div>
-
-        <!-- chat section ends -->
-        <!--$$$$$$$$$$$$$$$$- -->
-        <!--$$$$$$$$$$$$$$$$- -->
-
+        </div>
     </div>
+
+    <!-- chat section ends -->
+    <!--$$$$$$$$$$$$$$$$- -->
+    <!--$$$$$$$$$$$$$$$$- -->
+
+</div>
 
 </body>
 
@@ -239,5 +246,6 @@ $(".tab-item").click(function () {
   $(this).addClass("active").siblings().removeClass("active");
   $("#create_join .mod-box").eq($(this).index()).show().siblings().hide();
 })});
+
 
 </script>
