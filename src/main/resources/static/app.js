@@ -126,35 +126,3 @@ $(function () {
     $( "#send_msg" ).click(function() { sendMessage(); })
     setConnected(false)
 });
-
-
-// <script>
-var audio = document.querySelector('audio');
-
-function captureMicrophone(callback) {
-    btnReleaseMicrophone.disabled = false;
-
-    if(microphone) {
-        callback(microphone);
-        return;
-    }
-
-    if(typeof navigator.mediaDevices === 'undefined' || !navigator.mediaDevices.getUserMedia) {
-        alert('This browser does not supports WebRTC getUserMedia API.');
-
-        if(!!navigator.getUserMedia) {
-            alert('This browser seems supporting deprecated getUserMedia API.');
-        }
-    }
-
-    navigator.mediaDevices.getUserMedia({
-        audio: isEdge ? true : {
-            echoCancellation: false
-        }
-    }).then(function(mic) {
-        callback(mic);
-    }).catch(function(error) {
-        alert('Unable to capture your microphone. Please check console logs.');
-        console.error(error);
-    });
-}
