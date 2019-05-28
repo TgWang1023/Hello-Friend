@@ -121,16 +121,10 @@ $(function () {
     });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#create_room" ).click(function() { createRoom(); });
-    $( "#join_room" ).click(function() { joinRoom(); });
-    $( "#send_msg" ).click(function() { sendMessage(); });
-    setConnected(false);
-
-    // $( "#btn-start-recording" ).click(function() { btnStartRecording(); });
-    // $( "#btn-stop-recording" ).click(function() { btnStopRecording(); });
-    // $( "#btn-release-microphone" ).click(function() { btnReleaseMicrophone(); });
-    // $( "#btn-download-recording" ).click(function() { btnDownloadRecording(); });
-    // $( "#btn-convert-base64" ).click(function() {  });
+    $( "#create_room" ).click(function() { createRoom(); })
+    $( "#join_room" ).click(function() { joinRoom(); })
+    $( "#send_msg" ).click(function() { sendMessage(); })
+    setConnected(false)
 });
 
 
@@ -212,27 +206,15 @@ var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 var recorder; // globally accessible
 var microphone;
 
-// var btnStartRecording = $(document).getElementById('btn-start-recording');
-// var btnStopRecording = $(document).getElementById('btn-stop-recording');
-// var btnReleaseMicrophone = $(document).querySelector('#btn-release-microphone');
-// var btnDownloadRecording = $(document).getElementById('btn-download-recording');
-var htmlPage
-$.get("index.html", function(content) {
-    $htmlPage = $(content)
-})
-var btnStartRecording = htmlPage.find("#btn-start-recording")
-var btnStopRecording
-var btnReleaseMicrophone
-$.get("index.html", function(indexPage) {
-    btnStartRecording = $(indexPage).find("#btn-start-recording")
-    btnStopRecording = $(indexPage).find("#btn-stop-recording")
-    btnReleaseMicrophone = $(indexPage).find("#btn-release-microphone")
-})
+var btnStartRecording = document.getElementById('btn-start-recording');
+var btnStopRecording = document.getElementById('btn-stop-recording');
+var btnReleaseMicrophone = document.querySelector('#btn-release-microphone');
+var btnDownloadRecording = document.getElementById('btn-download-recording');
 
 btnStartRecording.onclick = function() {
     this.disabled = true;
-//    $( "#btn-start-recording" ).style.border = '';
-//    $( "#btn-start-recording" ).style.fontSize = '';
+    this.style.border = '';
+    this.style.fontSize = '';
 
     if (!microphone) {
         captureMicrophone(function(mic) {
@@ -296,14 +278,14 @@ btnStartRecording.onclick = function() {
     btnDownloadRecording.disabled = true;
 };
 
-function btnStopRecording() {
-    $( "#btn-stop-recording" ).disabled = true;
+btnStopRecording.onclick = function() {
+    this.disabled = true;
     recorder.stopRecording(stopRecordingCallback);
 };
 
-function btnReleaseMicrophone() {
-    $( "#btn-release-microphone" ).disabled = true;
-    $( "#btn-start-recording" ).disabled = false;
+btnReleaseMicrophone.onclick = function() {
+    this.disabled = true;
+    btnStartRecording.disabled = false;
 
     if(microphone) {
         microphone.stop();
@@ -315,8 +297,8 @@ function btnReleaseMicrophone() {
     }
 };
 
-function btnDownloadRecording() {
-    $( "#btn-download-recording" ).disabled = true;
+btnDownloadRecording.onclick = function() {
+    this.disabled = true;
     if(!recorder || !recorder.getBlob()) return;
 
     if(isSafari) {
