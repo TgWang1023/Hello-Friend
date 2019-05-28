@@ -242,13 +242,12 @@
 </body>
 
 <script type="text/javascript">
-$(function(){
-
 //控制tab切换
-$("#create_join .mod-box").eq(0).show().siblings().hide();
-$(".tab-item").click(function () {
-  $(this).addClass("active").siblings().removeClass("active");
-  $("#create_join .mod-box").eq($(this).index()).show().siblings().hide();
+$(function(){
+    $("#create_join .mod-box").eq(0).show().siblings().hide();
+    $(".tab-item").click(function () {
+    $(this).addClass("active").siblings().removeClass("active");
+    $("#create_join .mod-box").eq($(this).index()).show().siblings().hide();
 })});
 </script>
 
