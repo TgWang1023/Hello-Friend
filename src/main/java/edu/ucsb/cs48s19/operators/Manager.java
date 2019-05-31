@@ -111,7 +111,7 @@ public class Manager {
                 errorMessage = "Join failed. The room is full.";
                 break;
             case JOIN_MESSAGE:
-                errorMessage = "A user has joined the rooom.";
+                errorMessage = "A user has joined the room.";
                 break;
             case QUIT_SUCCESS:
                 errorMessage = "Another user has disconnected.";
@@ -141,12 +141,12 @@ public class Manager {
     }
 
     /**
-     * 
+     *
      * @param sessionId: String; sender's session ID
      * @return sessionIdList: String[]; session ID of users in the room
-     * 
+     *
      * The first session ID is sender's, then other receiver in the room.
-     *      
+     *
      */
     private static User[] getListeners(String sessionId) {
         Room room = sessionIdToRoom.get(sessionId);
