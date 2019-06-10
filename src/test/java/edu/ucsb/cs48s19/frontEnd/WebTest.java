@@ -1,4 +1,4 @@
-package package edu.ucsb.cs48s19.frontEnd;
+package edu.ucsb.cs48s19.frontEnd;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -19,14 +19,21 @@ import java.util.concurrent.TimeUnit;
 
 public class WebTest {
     //the web url to test
+    //important:make sure that your local host is running
     private static String url="http://localhost:8080/";
-    private static WebDriver driver1;
-    private static WebDriver driver2;
-    private static WebDriver driver3;
+    // private static WebDriver driver1;
+    // private static WebDriver driver2;
+    // private static WebDriver driver3;
+
+    //this is the project path
+//    private static String prj_path="/";
+    private static String chrome_driver="tools/chromedriver";
+    //for linux
+    // private static String chrome_driver=prj_path+"tools/chromedriver_linux";
+    //for windows
+    // private static String chrome_driver=prj_path+"tools/chromedriver.exe";
 
 
-    private static String prj_path="../../../../../../../";
-    private static String chrome_driver=prj_path+"tools/chromedriver";
 
 
     public WebElement connect(WebDriver dr){
@@ -148,7 +155,7 @@ public class WebTest {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get(WebTest.url);
         connect(driver);
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         return driver;
 
     }
@@ -196,6 +203,7 @@ public class WebTest {
         //first create a room using driver 1
         create_room(driver1,"testUser1","en","room1");
         //then create another room with the same name
+
         Assert.assertEquals("Create failed. This room name has been occupied.",create_room(driver2,"testUser2","en","room1"));
         disconnect_quit(driver1);
         disconnect_quit(driver2);
